@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  blendify:
+    image: blendify
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
