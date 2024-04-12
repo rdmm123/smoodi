@@ -7,8 +7,8 @@ from core.helpers import get_missing_keys
 
 
 class SpotifyClient:
-    SPOTIFY_BASE_URL = 'https://accounts.spotify.com'
-    SPOTIFY_API_URL = SPOTIFY_BASE_URL + '/api'
+    SPOTIFY_AUTH_URL = 'https://accounts.spotify.com'
+    SPOTIFY_API_URL = 'https://api.spotify.com/v1'
 
     SCOPES = (
         'playlist-read-private',
@@ -19,17 +19,20 @@ class SpotifyClient:
         'user-read-email'
     )
 
-    client_secret = 'SPOTIFY_CLIENT_SECRET'
-    client_id = 'SPOTIFY_CLIENT_ID'
+    client_secret = None
+    client_id = None
 
-    _load_from_env = ['client_secret', 'client_id']
+    # The keys here will end up being class attributes
+    load_from_env = {
+        'client_secret': 'SPOTIFY_CLIENT_SECRET',
+        'client_id': 'SPOTIFY_CLIENT_ID'
+    }
 
     def __init__(self) -> None:
         self._load_attrs_from_env()
 
     def _load_attrs_from_env(self):
-        for attribute in self._load_from_env:
-            env_var = getattr(self, attribute)
+        for attribute, env_var in self.load_from_env.items():
             value = os.getenv(env_var)
 
             if value is None:
@@ -42,13 +45,14 @@ class SpotifyClient:
             'client_id': self.client_id,
             'response_type': 'code',
             'redirect_uri': redirect_url,
-            'scope': ' '.join(self.SCOPES)
+            'scope': ' '.join(self.SCOPES),
+            'show_dialog': True
         }
 
         if state is not None:
             query_params['state'] = state
 
-        return f'{self.SPOTIFY_BASE_URL}/authorize?{urlencode(query_params)}'
+        return f'{self.SPOTIFY_AUTH_URL}/authorize?{urlencode(query_params)}'
     
     def authenticate(self, auth_code: str, redirect_url: str):
         body = {
@@ -61,7 +65,7 @@ class SpotifyClient:
         headers = {
             'Authorization': f'Basic {b64_auth_string}'
         }
-        r = requests.post(f'{self.SPOTIFY_API_URL}/token',
+        r = requests.post(f'{self.SPOTIFY_AUTH_URL}/api/token',
                              data=body,
                              headers=headers)
         resp = r.json()
