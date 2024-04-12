@@ -1,15 +1,15 @@
 import random
 import string
 import os
-from typing import Sequence, Dict, Any
+from typing import Dict, Any
 
 from flask import url_for
 
-def get_random_string(length: int):
+def get_random_string(length: int) -> str:
     return ''.join(
         random.choices(string.ascii_letters + string.digits, k=length))
 
-def get_missing_keys(d: Dict[str, Any], *keys_to_check: Sequence[str]):
+def get_missing_keys(d: Dict[str, Any], *keys_to_check: str) -> list[str]:
     missing = []
     for key in keys_to_check:
         if key not in d or not d[key]:
@@ -17,7 +17,7 @@ def get_missing_keys(d: Dict[str, Any], *keys_to_check: Sequence[str]):
 
     return missing
 
-def get_absolute_url_for(view: str):
+def get_absolute_url_for(view: str) -> str:
     app_url = os.getenv('APP_URL')
 
     if not app_url:

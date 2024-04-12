@@ -1,0 +1,5 @@
+{
+    "mypy-type-checker.args": ["--strict"],
+    "mypy-type-checker.importStrategy": "fromEnvironment",
+    "mypy-type-checker.cwd": "${workspaceFolder}/src"
+}
