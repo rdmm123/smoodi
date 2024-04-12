@@ -1,6 +1,6 @@
 import random
 import string
-import os
+import re
 from typing import Dict, Any
 
 from flask import url_for, request
@@ -19,3 +19,11 @@ def get_missing_keys(d: Dict[str, Any], *keys_to_check: str) -> list[str]:
 
 def get_absolute_url_for(view: str) -> str:
     return request.host_url.rstrip('/') + url_for(view)
+
+def is_email_valid(email: str) -> bool:
+    match = re.match(r'^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$', email)
+
+    if match is None:
+        return False
+    
+    return True

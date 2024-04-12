@@ -3,9 +3,11 @@ import requests
 import base64
 from urllib.parse import urlencode
 from typing import Dict, Any
+from flask import current_app
 
 from core.helpers import get_missing_keys
 from core.client.base import Client
+from core.client.spotify.spotify_user_model import SpotifyUser
 
 
 class SpotifyClient(Client):
@@ -73,6 +75,9 @@ class SpotifyClient(Client):
         r = requests.post(f'{self.SPOTIFY_AUTH_URL}/api/token',
                              data=body,
                              headers=headers)
+        
+        current_app.logger.debug(r.text)
+        
         resp: Dict[str, Any] = r.json()
 
         missing_keys = get_missing_keys(
@@ -84,3 +89,12 @@ class SpotifyClient(Client):
                             f"\nrequest_headers: {headers}")
         
         return resp
+    
+    def get_user(self, user_identifier: str) -> SpotifyUser:
+        r = requests.get(
+            f'{self.SPOTIFY_API_URL}/me',
+             headers={'Authorization': f'Bearer {user_identifier}'}
+        )
+        
+        resp = r.json()
+        return SpotifyUser.from_user_api_response(resp)
