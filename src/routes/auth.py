@@ -5,10 +5,11 @@ from urllib.parse import urlencode
 from core.client.spotify_client import SpotifyClient
 from core.helpers import get_random_string, get_absolute_url_for
 from core.storage.session_storage import SessionStorage
+from core.storage.cookie_storage import CookieStorage
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 client = SpotifyClient()
-storage = SessionStorage(session)
+storage = CookieStorage()
 
 @bp.route("/login")
 def login() -> ResponseReturnValue:
@@ -23,8 +24,7 @@ def login() -> ResponseReturnValue:
 @bp.route("/logout")
 def logout() -> ResponseReturnValue:
     resp = make_response(redirect(url_for('frontend.catch_all')))
-    session.clear()
-    storage.flush()
+    storage.flush(response=resp)
     return resp
 
 @bp.route("/callback")
@@ -50,8 +50,8 @@ def callback() -> ResponseReturnValue:
     
     resp = make_response(redirect(url_for('frontend.catch_all')))
     
-    storage.write('token', auth_resp['access_token'])
-    storage.write('refresh', auth_resp['refresh_token'])
-    storage.write('expires', str(auth_resp['expires_in']))
+    storage.write('token', auth_resp['access_token'], response=resp)
+    storage.write('refresh', auth_resp['refresh_token'], response=resp)
+    storage.write('expires', str(auth_resp['expires_in']), response=resp)
 
     return resp

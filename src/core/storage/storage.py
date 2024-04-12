@@ -10,5 +10,5 @@ class Storage(Protocol):
     def delete(self, where: str, **params: Any) -> None:
         raise NotImplementedError()
     
-    def flush(self) -> None:
+    def flush(self, **params: Any) -> None:
         raise NotImplementedError()
