@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 from typing import Dict, Any
 
 from core.helpers import get_missing_keys
-from core.client.client import Client
+from core.client.base import Client
 
 
 class SpotifyClient(Client):
