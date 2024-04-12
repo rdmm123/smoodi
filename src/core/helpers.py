@@ -3,7 +3,7 @@ import string
 import os
 from typing import Dict, Any
 
-from flask import url_for
+from flask import url_for, request
 
 def get_random_string(length: int) -> str:
     return ''.join(
@@ -18,9 +18,4 @@ def get_missing_keys(d: Dict[str, Any], *keys_to_check: str) -> list[str]:
     return missing
 
 def get_absolute_url_for(view: str) -> str:
-    app_url = os.getenv('APP_URL')
-
-    if not app_url:
-        raise Exception("APP_URL environment variable not set.")
-    
-    return app_url.rstrip('/') + url_for(view)
+    return request.host_url.rstrip('/') + url_for(view)
