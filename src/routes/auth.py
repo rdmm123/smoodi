@@ -4,16 +4,17 @@ from urllib.parse import urlencode
 
 from core.client.spotify_client import SpotifyClient
 from core.helpers import get_random_string, get_absolute_url_for
+from core.storage.session_storage import SessionStorage
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-spotify_client = SpotifyClient()
+client = SpotifyClient()
+storage = SessionStorage(session)
 
 @bp.route("/login")
 def login() -> ResponseReturnValue:
     state = get_random_string(16)
-
     
-    auth_url = spotify_client.generate_auth_url(
+    auth_url = client.generate_auth_url(
         get_absolute_url_for('auth.callback'), state)
     
     session['state'] = state
@@ -22,9 +23,8 @@ def login() -> ResponseReturnValue:
 @bp.route("/logout")
 def logout() -> ResponseReturnValue:
     resp = make_response(redirect(url_for('frontend.catch_all')))
-    resp.delete_cookie('token')
-    resp.delete_cookie('refresh')
-    resp.delete_cookie('expires')
+    session.clear()
+    storage.flush()
     return resp
 
 @bp.route("/callback")
@@ -45,12 +45,13 @@ def callback() -> ResponseReturnValue:
     
     del session['state']
     
-    auth_resp = spotify_client.authenticate(
+    auth_resp = client.authenticate(
         auth_code=code, redirect_url=get_absolute_url_for('auth.callback'))
     
     resp = make_response(redirect(url_for('frontend.catch_all')))
-    resp.set_cookie('token', auth_resp['access_token'])
-    resp.set_cookie('refresh', auth_resp['refresh_token'])
-    resp.set_cookie('expires', str(auth_resp['expires_in']))
+    
+    storage.write('token', auth_resp['access_token'])
+    storage.write('refresh', auth_resp['refresh_token'])
+    storage.write('expires', str(auth_resp['expires_in']))
 
     return resp
