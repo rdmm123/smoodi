@@ -1,9 +1,28 @@
 import random
 import string
 import re
-from typing import Dict, Any
+import os
+from typing import Dict, Any, Type
 
-from flask import url_for, request
+from flask import url_for, request, current_app
+
+class LoadFromEnvMixin:
+    load_from_env: Dict[str, str] = {}
+
+    def __init__(self) -> None:
+        self._load_attrs_from_env()
+
+    def _load_attrs_from_env(self) -> None:
+        print(self.load_from_env)
+        for attribute, env_var in self.load_from_env.items():
+            print(f'loading {env_var} to {attribute}')
+            value = os.getenv(env_var)
+
+            if value is None:
+                raise Exception(f'{env_var} not found in environment variables.')
+            
+            setattr(self, attribute, value)
+
 
 def get_random_string(length: int) -> str:
     return ''.join(

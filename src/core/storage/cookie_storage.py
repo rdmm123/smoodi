@@ -1,8 +1,7 @@
-from typing import Any, MutableMapping, List
+from typing import Any
 from flask import request
-from flask.typing import ResponseClass
 
-from core.storage.storage import Storage
+from core.storage.base import Storage
 
 class CookieStorage(Storage):
     def write(self, to: str, value: Any, **params: Any) -> None:

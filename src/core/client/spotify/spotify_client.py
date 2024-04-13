@@ -5,12 +5,12 @@ from urllib.parse import urlencode
 from typing import Dict, Any
 from flask import current_app
 
-from core.helpers import get_missing_keys
+from core.helpers import get_missing_keys, LoadFromEnvMixin
 from core.client.base import Client
 from core.client.spotify.spotify_user_model import SpotifyUser
 
 
-class SpotifyClient(Client):
+class SpotifyClient(Client, LoadFromEnvMixin):
     SPOTIFY_AUTH_URL = 'https://accounts.spotify.com'
     SPOTIFY_API_URL = 'https://api.spotify.com/v1'
 
@@ -26,23 +26,10 @@ class SpotifyClient(Client):
     client_secret = None
     client_id = None
 
-    # The keys here will end up being class attributes
     load_from_env = {
         'client_secret': 'SPOTIFY_CLIENT_SECRET',
         'client_id': 'SPOTIFY_CLIENT_ID'
     }
-
-    def __init__(self) -> None:
-        self._load_attrs_from_env()
-
-    def _load_attrs_from_env(self) -> None:
-        for attribute, env_var in self.load_from_env.items():
-            value = os.getenv(env_var)
-
-            if value is None:
-                raise Exception(f'{env_var} not found in environment variables.')
-            
-            setattr(self, attribute, value)
 
     def generate_auth_url(self, redirect_url: str, state: str | None = None) -> str:
         query_params = {
@@ -77,7 +64,7 @@ class SpotifyClient(Client):
                              headers=headers)
         
         current_app.logger.debug(r.text)
-        
+
         resp: Dict[str, Any] = r.json()
 
         missing_keys = get_missing_keys(

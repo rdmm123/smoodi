@@ -9,10 +9,11 @@ from core.client.spotify.spotify_client import SpotifyClient
 from core.helpers import get_random_string, get_absolute_url_for, is_email_valid
 from core.storage.session_storage import SessionStorage
 from core.storage.cookie_storage import CookieStorage
+from core.storage.cache_storage import CacheStorage
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 client = SpotifyClient()
-storage = CookieStorage()
+storage = CacheStorage()
 
 @bp.route("/login", defaults={'encoded_email': None})
 @bp.route("/login/<encoded_email>")
@@ -43,6 +44,7 @@ def login(encoded_email: str | None) -> ResponseReturnValue:
 @bp.route("/logout")
 def logout() -> ResponseReturnValue:
     resp = make_response(redirect(url_for('frontend.catch_all')))
+    session.clear()
     storage.flush(response=resp)
     return resp
 

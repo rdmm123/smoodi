@@ -1,7 +1,7 @@
-from typing import Any, MutableMapping
+from typing import Any
 from flask import session
 
-from core.storage.storage import Storage
+from core.storage.base import Storage
 
 class SessionStorage(Storage):
     def write(self, to: str, value: Any, **params: Any) -> None:
