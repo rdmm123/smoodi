@@ -2,12 +2,14 @@ import base64
 import click
 import json
 import time
+import datetime as dt
 from flask import Blueprint, redirect, session, request, url_for, make_response, current_app
 from flask.typing import ResponseReturnValue
 from urllib.parse import urlencode
 from dataclasses import asdict
 
 from core.client.spotify.spotify_client import SpotifyClient
+from core.client.spotify.spotify_user_model import SpotifyUser
 from core.helpers import get_random_string, get_absolute_url_for, is_email_valid
 from core.storage.session_storage import SessionStorage
 from core.storage.cookie_storage import CookieStorage
@@ -33,10 +35,20 @@ def login(encoded_email: str | None) -> ResponseReturnValue:
         if not is_email_valid(email):
             return redirect(url_for('frontend.catch_all') + 'login_result?' + \
                             urlencode({'error': f'email {email} is not valid'}))
-        current_app.logger.debug(request.cookies)
         existing_data = storage.read(f'user:{email}')
     
     if existing_data:
+        user = SpotifyUser(**json.loads(existing_data))
+
+        new_auth_data = client.handle_token_refresh(
+            user.token,
+            user.refresh_token,
+            dt.datetime.fromisoformat(user.token_expires))
+        
+        if new_auth_data['refreshed']:
+            user.load_auth_data_from_response(new_auth_data)
+            storage.write(f'user:{user.email}', json.dumps(asdict(user)))
+        
         return redirect(url_for('frontend.catch_all'))
 
     state = get_random_string(16)
@@ -80,7 +92,7 @@ def callback() -> ResponseReturnValue:
     auth_resp = client.authenticate(
         auth_code=code, redirect_url=get_absolute_url_for('auth.callback'))
     
-    user = client.get_user(auth_resp['access_token'])
+    user = client.get_user(auth_resp['token'])
     user.load_auth_data_from_response(auth_resp)
     
     if session['email'] and session['email'] != user.email:

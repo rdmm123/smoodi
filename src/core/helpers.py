@@ -2,7 +2,7 @@ import random
 import string
 import re
 import os
-from typing import Dict, Any, Type
+from typing import Dict, Any
 
 from flask import url_for, request
 

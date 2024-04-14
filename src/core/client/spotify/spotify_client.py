@@ -1,8 +1,8 @@
-import os
+import datetime as dt
 import requests
 import base64
 from urllib.parse import urlencode
-from typing import Dict, Any
+from typing import Any, Iterable
 from flask import current_app
 
 from core.helpers import get_missing_keys, LoadFromEnvMixin
@@ -31,11 +31,24 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         'client_id': 'SPOTIFY_CLIENT_ID'
     }
 
-    def _make_request(self, method: str, **request_kwargs: Any) -> Dict[str, Any]:
-        current_app.logger.debug(f'{method.upper()} Request to Spotify API: {request_kwargs}')
+    def _make_request(self,
+                      method: str,
+                      keys_to_check: Iterable[str] = [],
+                      **request_kwargs: Any) -> dict[str, Any]:
+        current_app.logger.debug(
+            f'{method.upper()} Request to Spotify API: {request_kwargs}')
+        
         r = requests.request(method.upper(), **request_kwargs)
-        current_app.logger.debug(f'{r.status_code} Response from Spotify API: {r.text}')
-        resp: Dict[str, Any] = r.json()
+
+        current_app.logger.debug(
+            f'{r.status_code} Response from Spotify API: {r.text}')
+        
+        resp: dict[str, Any] = r.json()
+
+        missing_keys = get_missing_keys(resp, *keys_to_check)
+        if missing_keys:
+            raise Exception(f"{', '.join(missing_keys)} not found in response.")
+        
         return resp
 
     def generate_auth_url(self, redirect_url: str, state: str | None = None) -> str:
@@ -52,7 +65,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
 
         return f'{self.SPOTIFY_AUTH_URL}/authorize?{urlencode(query_params)}'
     
-    def authenticate(self, **kwargs: Any) -> Dict[str, Any]:
+    def authenticate(self, **kwargs: Any) -> dict[str, Any]:
         auth_code = kwargs.get('auth_code')
         redirect_url = kwargs.get('redirect_url')
         
@@ -66,21 +79,56 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         headers = {
             'Authorization': f'Basic {b64_auth_string}'
         }
-
-        resp = self._make_request('post', 
+        
+        keys_to_check = ('access_token', 'refresh_token', 'expires_in')
+        resp = self._make_request(method='post', 
+                                  keys_to_check=keys_to_check,
                                   url=f'{self.SPOTIFY_AUTH_URL}/api/token',
                                   data=body,
                                   headers=headers)
-
-        missing_keys = get_missing_keys(
-            resp, 'access_token', 'refresh_token', 'expires_in')
-
-        if missing_keys:
-            raise Exception(f"{', '.join(missing_keys)} not found in response."
-                            f"\nresponse: {resp}\nrequest body: {body}"
-                            f"\nrequest_headers: {headers}")
         
-        return resp
+        expiry_date = dt.datetime.now() + dt.timedelta(seconds=resp['expires_in'])
+        return {
+            'token': resp['access_token'],
+            'refresh_token': resp['refresh_token'],
+            'expiry_date': expiry_date
+        }
+    
+    def handle_token_refresh(self,
+                             token: str,
+                             refresh_token: str,
+                             expiry_date: dt.datetime) -> dict[str, Any]:
+        if dt.datetime.now() < expiry_date:
+            return {
+                'token': token,
+                'expiry_date': expiry_date,
+                'refreshed': False
+            }
+        
+        body = {
+            'grant_type': 'refresh_token',
+            'refresh_token': refresh_token,
+            'client_id': self.client_id
+        }
+        b64_auth_string = base64.b64encode(
+            f'{self.client_id}:{self.client_secret}'.encode()).decode()
+        headers = {
+            'Authorization': f'Basic {b64_auth_string}'
+        }
+
+        keys_to_check = ('access_token', 'expires_in')
+        resp = self._make_request(method='post',
+                                  keys_to_check=keys_to_check,
+                                  url=f'{self.SPOTIFY_AUTH_URL}/api/token',
+                                  data=body,
+                                  headers=headers)
+        
+        new_expiry_date = dt.datetime.now() + dt.timedelta(seconds=resp['expires_in'])
+        return {
+            'token': resp['access_token'],
+            'expiry_date': new_expiry_date,
+            'refreshed': True
+        }
     
     def get_user(self, user_identifier: str) -> SpotifyUser:        
         resp = self._make_request(
