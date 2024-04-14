@@ -31,6 +31,13 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         'client_id': 'SPOTIFY_CLIENT_ID'
     }
 
+    def _make_request(self, method: str, **request_kwargs: Any) -> Dict[str, Any]:
+        current_app.logger.debug(f'{method.upper()} Request to Spotify API: {request_kwargs}')
+        r = requests.request(method.upper(), **request_kwargs)
+        current_app.logger.debug(f'{r.status_code} Response from Spotify API: {r.text}')
+        resp: Dict[str, Any] = r.json()
+        return resp
+
     def generate_auth_url(self, redirect_url: str, state: str | None = None) -> str:
         query_params = {
             'client_id': self.client_id,
@@ -59,13 +66,11 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         headers = {
             'Authorization': f'Basic {b64_auth_string}'
         }
-        r = requests.post(f'{self.SPOTIFY_AUTH_URL}/api/token',
-                             data=body,
-                             headers=headers)
-        
-        current_app.logger.debug(r.text)
 
-        resp: Dict[str, Any] = r.json()
+        resp = self._make_request('post', 
+                                  url=f'{self.SPOTIFY_AUTH_URL}/api/token',
+                                  data=body,
+                                  headers=headers)
 
         missing_keys = get_missing_keys(
             resp, 'access_token', 'refresh_token', 'expires_in')
@@ -77,11 +82,9 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         
         return resp
     
-    def get_user(self, user_identifier: str) -> SpotifyUser:
-        r = requests.get(
-            f'{self.SPOTIFY_API_URL}/me',
-             headers={'Authorization': f'Bearer {user_identifier}'}
-        )
-        
-        resp = r.json()
+    def get_user(self, user_identifier: str) -> SpotifyUser:        
+        resp = self._make_request(
+            method='get',
+            url=f'{self.SPOTIFY_API_URL}/me',
+            headers={'Authorization': f'Bearer {user_identifier}'})
         return SpotifyUser.from_user_api_response(resp)

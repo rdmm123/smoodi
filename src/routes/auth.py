@@ -1,5 +1,7 @@
-import json
 import base64
+import click
+import json
+import time
 from flask import Blueprint, redirect, session, request, url_for, make_response, current_app
 from flask.typing import ResponseReturnValue
 from urllib.parse import urlencode
@@ -15,11 +17,15 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 client = SpotifyClient()
 storage = CacheStorage()
 
+# Consider not requiring email for secondary users
+# In case main user doesn't know the email. I could link the link (lol) to the
+# main user somehow instead. Or maybe create like a session code in which 
+# people join? But obviously not known to people and just stored in the backend
+# or maybe just do it hacky and have a set 'email' like 'unknown' and that way
+# we know its not main user and we simply don't know the email for now
 @bp.route("/login", defaults={'encoded_email': None})
 @bp.route("/login/<encoded_email>")
 def login(encoded_email: str | None) -> ResponseReturnValue:
-    state = get_random_string(16)
-    
     email = None
     existing_data = None
     if encoded_email:
@@ -33,12 +39,13 @@ def login(encoded_email: str | None) -> ResponseReturnValue:
     if existing_data:
         return redirect(url_for('frontend.catch_all'))
 
-    session['email'] = email
-
+    state = get_random_string(16)
     auth_url = client.generate_auth_url(
         get_absolute_url_for('auth.callback'), state)
     
     session['state'] = state
+    session['email'] = email
+
     return redirect(auth_url)
 
 @bp.route("/logout")
@@ -87,3 +94,48 @@ def callback() -> ResponseReturnValue:
     del session['state']
     del session['email']
     return resp
+
+@bp.cli.command('auth-flow')
+def auth_flow() -> None:
+    def check_for_user_login(email: str, attempts: int = 60, sleep_seconds: int = 1) -> bool:
+        user_logged_in = False
+        attempt_count = 0
+
+        click.echo("Waiting for log in... "
+                    f"(You have {attempts * sleep_seconds} seconds)")
+        
+        while not user_logged_in and attempt_count < attempts:
+            time.sleep(sleep_seconds)
+            user_data = storage.read(f'user:{email}')
+            user_logged_in = user_data is not None
+            attempt_count += 1
+
+        return user_logged_in
+    
+    login_url = url_for('auth.login')
+
+    # this is just to check if user logged in. we don't really need it.
+    main_user_email = click.prompt("What's your spotify email?", type=str)
+    click.echo(f"Please log in using this link: {login_url}")
+
+    if not check_for_user_login(main_user_email):
+        return
+
+    click.echo("Now to add the rest of the users to the blend...")
+    add_new_user = True
+    while add_new_user:
+        new_user_email = click.prompt("What's your friend's email?", type=str)
+
+        if not is_email_valid(new_user_email):
+            click.echo("Invalid email. Please try again.")
+            continue
+        
+        encoded_email = base64.urlsafe_b64encode(
+            new_user_email.encode()).decode()
+        
+        click.echo(f"Please send this link to your friend to log in: {login_url + '/' + encoded_email}")
+
+        if not check_for_user_login(new_user_email):
+            return
+
+        add_new_user = click.confirm("Do you wish to add another user?")

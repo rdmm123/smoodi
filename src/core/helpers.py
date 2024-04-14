@@ -4,7 +4,7 @@ import re
 import os
 from typing import Dict, Any, Type
 
-from flask import url_for, request, current_app
+from flask import url_for, request
 
 class LoadFromEnvMixin:
     load_from_env: Dict[str, str] = {}
@@ -13,9 +13,7 @@ class LoadFromEnvMixin:
         self._load_attrs_from_env()
 
     def _load_attrs_from_env(self) -> None:
-        print(self.load_from_env)
         for attribute, env_var in self.load_from_env.items():
-            print(f'loading {env_var} to {attribute}')
             value = os.getenv(env_var)
 
             if value is None:
