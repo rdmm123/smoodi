@@ -3,13 +3,13 @@ import click
 import json
 import time
 import datetime as dt
-from flask import Blueprint, redirect, session, request, url_for, make_response, current_app
+from flask import Blueprint, redirect, session, request, url_for, make_response
 from flask.typing import ResponseReturnValue
 from urllib.parse import urlencode
 from dataclasses import asdict
 
 from core.client.spotify.spotify_client import SpotifyClient
-from core.client.spotify.spotify_user_model import SpotifyUser
+from core.client.spotify.models import SpotifyUser
 from core.helpers import get_random_string, get_absolute_url_for, is_email_valid
 from core.storage.session_storage import SessionStorage
 from core.storage.cookie_storage import CookieStorage

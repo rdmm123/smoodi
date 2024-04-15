@@ -4,10 +4,11 @@ import base64
 from urllib.parse import urlencode
 from typing import Any, Iterable
 from flask import current_app
+from enum import StrEnum
 
 from core.helpers import get_missing_keys, LoadFromEnvMixin
-from core.client.base import Client
-from core.client.spotify.spotify_user_model import SpotifyUser
+from core.client.base import Client, SUCCESS_STATUSES
+from core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyArtist
 
 
 class SpotifyClient(Client, LoadFromEnvMixin):
@@ -42,6 +43,9 @@ class SpotifyClient(Client, LoadFromEnvMixin):
 
         current_app.logger.debug(
             f'{r.status_code} Response from Spotify API: {r.text}')
+        
+        if r.status_code not in SUCCESS_STATUSES:
+            raise Exception(f"Error {r.status_code} received from Spotify API")
         
         resp: dict[str, Any] = r.json()
 
@@ -135,4 +139,33 @@ class SpotifyClient(Client, LoadFromEnvMixin):
             method='get',
             url=f'{self.SPOTIFY_API_URL}/me',
             headers={'Authorization': f'Bearer {user_identifier}'})
-        return SpotifyUser.from_user_api_response(resp)
+        return SpotifyUser.from_api_response(resp)
+    
+    # ignoring type here as I'm pretty sure this is a bug
+    def get_top_tracks_from_user(self, user_identifier: str, amount: int = 50) -> list[SpotifyTrack]: # type: ignore
+        offset = 0
+        max_limit = 50
+        remaining = amount
+        
+        tracks: list[SpotifyTrack] = []
+        while remaining > 0:
+            if remaining < max_limit:
+                limit = remaining
+            else:
+                limit = max_limit
+
+            query_params = {
+                'time_range': 'short_term', #TODO: make this customizable
+                'limit': limit,
+                'offset': offset
+            }
+
+            resp = self._make_request(method='get',
+                                      url=f'{self.SPOTIFY_API_URL}/me/top/tracks',
+                                      params=query_params,
+                                      headers={'Authorization': f'Bearer {user_identifier}'})
+            tracks += [SpotifyTrack.from_api_response(track) for track in resp["items"]]
+            offset += limit
+            remaining -= limit
+        
+        return tracks

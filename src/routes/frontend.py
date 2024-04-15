@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, current_app, url_for
+from flask import Blueprint
 from flask.typing import ResponseReturnValue
 
 bp = Blueprint('frontend', __name__,  static_folder='../frontend')
