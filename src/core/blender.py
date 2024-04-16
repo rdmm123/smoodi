@@ -121,7 +121,7 @@ class Blender:
 
             if stack_top in self.playlist:
                 stack_top = user_stack_handler.pop_left_and_pull_from_pool()
-                
+
             elif stack_top.name in current_tops:
                 owner = current_tops[stack_top.name]["user"]
 
@@ -144,6 +144,8 @@ class Blender:
 
             current_tops[stack_top.name] = {"user": current_user, "track": stack_top}
 
+        # maybe just add user track instead. It would be nice to keep track of which track belongs to each user
+        # alternatively, add a user attribute to track object if that makes more sense
         self.playlist += [ut["track"] for ut in current_tops.values()]
 
         return self.blend()
