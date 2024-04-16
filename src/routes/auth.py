@@ -11,9 +11,8 @@ from dataclasses import asdict
 from core.client.spotify.spotify_client import SpotifyClient
 from core.client.spotify.models import SpotifyUser
 from core.helpers import get_random_string, get_absolute_url_for, is_email_valid
-from core.storage.session_storage import SessionStorage
-from core.storage.cookie_storage import CookieStorage
 from core.storage.cache_storage import CacheStorage
+from core.blender import Blender
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 client = SpotifyClient()
@@ -31,7 +30,7 @@ def login(encoded_email: str | None) -> ResponseReturnValue:
     email = None
     existing_data = None
     if encoded_email:
-        email = base64.urlsafe_b64decode(encoded_email).decode()
+        email = base64.urlsafe_b64decode(encoded_email + '==').decode()
         if not is_email_valid(email):
             return redirect(url_for('frontend.catch_all') + 'login_result?' + \
                             urlencode({'error': f'email {email} is not valid'}))
@@ -123,6 +122,7 @@ def auth_flow() -> None:
             attempt_count += 1
 
         return user_logged_in
+    users: list[SpotifyUser] = []
     
     login_url = url_for('auth.login')
 
@@ -132,6 +132,8 @@ def auth_flow() -> None:
 
     if not check_for_user_login(main_user_email):
         return
+    
+    users.append(SpotifyUser(**json.loads(storage.read(f'user:{main_user_email}'))))
 
     click.echo("Now to add the rest of the users to the blend...")
     add_new_user = True
@@ -149,5 +151,12 @@ def auth_flow() -> None:
 
         if not check_for_user_login(new_user_email):
             return
+        
+        users.append(SpotifyUser(**json.loads(storage.read(f'user:{new_user_email}'))))
 
         add_new_user = click.confirm("Do you wish to add another user?")
+
+    length = click.prompt("Length of playlist?", type=int)
+    blender = Blender(client, users, length)
+    playlist = blender.blend()
+    click.echo(playlist)

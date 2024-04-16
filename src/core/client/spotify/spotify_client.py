@@ -4,12 +4,10 @@ import base64
 from urllib.parse import urlencode
 from typing import Any, Iterable
 from flask import current_app
-from enum import StrEnum
 
 from core.helpers import get_missing_keys, LoadFromEnvMixin
 from core.client.base import Client, SUCCESS_STATUSES
-from core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyArtist
-
+from core.client.spotify.models import SpotifyUser, SpotifyTrack
 
 class SpotifyClient(Client, LoadFromEnvMixin):
     SPOTIFY_AUTH_URL = 'https://accounts.spotify.com'
@@ -141,12 +139,14 @@ class SpotifyClient(Client, LoadFromEnvMixin):
             headers={'Authorization': f'Bearer {user_identifier}'})
         return SpotifyUser.from_api_response(resp)
     
-    # ignoring type here as I'm pretty sure this is a bug
-    def get_top_tracks_from_user(self, user_identifier: str, amount: int = 50) -> list[SpotifyTrack]: # type: ignore
+    # ignoring type here as I'm pretty sure there is a bug in mypy
+    def get_top_tracks_from_user(self, user: SpotifyUser, amount: int = 50) -> list[SpotifyTrack]: # type: ignore
+        # could move validation logic to _make_request
         offset = 0
         max_limit = 50
         remaining = amount
-        
+        time_range = 'short_term'
+
         tracks: list[SpotifyTrack] = []
         while remaining > 0:
             if remaining < max_limit:
@@ -155,7 +155,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
                 limit = max_limit
 
             query_params = {
-                'time_range': 'short_term', #TODO: make this customizable
+                'time_range': time_range, #TODO: make this customizable
                 'limit': limit,
                 'offset': offset
             }
@@ -163,9 +163,22 @@ class SpotifyClient(Client, LoadFromEnvMixin):
             resp = self._make_request(method='get',
                                       url=f'{self.SPOTIFY_API_URL}/me/top/tracks',
                                       params=query_params,
-                                      headers={'Authorization': f'Bearer {user_identifier}'})
+                                      headers={'Authorization': f'Bearer {user.token}'})
+            
+            if resp['total'] < amount:
+                current_app.logger.info(
+                    f"User {user.email}'s top tracks from last month arent enough. "
+                    f"Amount requested: {amount}, total: {resp['total']}.")
+                
+                continue
+                
+
             tracks += [SpotifyTrack.from_api_response(track) for track in resp["items"]]
             offset += limit
             remaining -= limit
         
+        if len(tracks) < amount:
+            pass
         return tracks
+    
+SpotifyUser._client_cls = SpotifyClient

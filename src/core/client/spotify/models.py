@@ -7,10 +7,6 @@ from core.client.base import User, Artist, Track
 
 @dataclass
 class SpotifyUser(User):
-    token: str = ''
-    refresh_token: str = ''
-    token_expires: str = ''
-
     @classmethod
     def from_api_response(cls, response: Dict[str, Any]) -> Self:
         return cls(
