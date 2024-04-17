@@ -34,8 +34,6 @@ class SpotifyArtist(Artist):
 
 @dataclass
 class SpotifyTrack(Track):
-    preview: str
-
     @classmethod
     def from_api_response(cls, response: Dict[str, Any]) -> Self:
         return cls(

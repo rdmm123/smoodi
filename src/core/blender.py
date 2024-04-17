@@ -40,11 +40,6 @@ from core.client.base import User, Client, Track
 DEFAULT_PLAYLIST_LENGTH = 100
 
 
-class UserTrack(TypedDict):
-    user: str  # might not even need this
-    track: Track
-
-
 class StackHandler:
     def __init__(self, stack: list[Track] = [], pool: list[Track] = []) -> None:
         self.stack = deque(stack)
@@ -95,15 +90,8 @@ class Blender:
 
     def _all_stacks_empty(self) -> bool:
         return all(len(sh.stack) == 0 for sh in self._stacks_per_user.values())
-
-    def blend(self) -> list[Track]:
-        if len(self.playlist) == self.playlist_length:
-            return self.playlist
-
-        if self._all_stacks_empty():
-            return self.playlist
-
-        current_tops: dict[str, UserTrack] = {}
+    
+    def _get_remaining_users(self) -> set[str]:
         remaining_users: set[str] = set()
 
         for user in self._stacks_per_user:
@@ -112,40 +100,51 @@ class Blender:
 
             remaining_users.add(user)
 
+        return remaining_users
+
+    def blend(self) -> list[Track]:
+        if len(self.playlist) == self.playlist_length:
+            return self.playlist
+
+        if self._all_stacks_empty():
+            return self.playlist
+
+        current_tops: dict[str, Track] = {}
+        remaining_users = self._get_remaining_users()
 
         while len(remaining_users) > 0:
             current_user = remaining_users.pop()
             user_stack_handler = self._stacks_per_user[current_user]
             stack_top = user_stack_handler.stack.popleft()
 
-
             if stack_top in self.playlist:
                 stack_top = user_stack_handler.pop_left_and_pull_from_pool()
 
             elif stack_top.name in current_tops:
-                owner = current_tops[stack_top.name]["user"]
+                existing_track = current_tops[stack_top.name]
+                # to make mypy stop crying
+                assert existing_track.user is not None
 
+                owner = existing_track.user
                 owner_stack_handler = self._stacks_per_user[owner]
 
                 if owner_stack_handler.track_amount < user_stack_handler.track_amount:
                     stack_top = user_stack_handler.pop_left_and_pull_from_pool()
                 elif owner_stack_handler.track_amount > user_stack_handler.track_amount:
-                    current_tops[stack_top.name]["user"] = current_user
+                    existing_track.user = current_user
                     owner_stack_handler.pull_from_pool()
                     remaining_users.add(owner)
                 else:
                     new_owner = random.choice((owner, current_user))
                     if new_owner == current_user:
-                        current_tops[stack_top.name]["user"] = current_user
+                        existing_track.user = current_user
                         owner_stack_handler
                         remaining_users.add(owner)
                     else:
                         user_stack_handler.pop_left_and_pull_from_pool()
 
-            current_tops[stack_top.name] = {"user": current_user, "track": stack_top}
+            current_tops[stack_top.name] = stack_top
 
-        # maybe just add user track instead. It would be nice to keep track of which track belongs to each user
-        # alternatively, add a user attribute to track object if that makes more sense
-        self.playlist += [ut["track"] for ut in current_tops.values()]
+        self.playlist += [track for track in current_tops.values()]
 
         return self.blend()

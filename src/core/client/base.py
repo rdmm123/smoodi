@@ -22,6 +22,8 @@ class Track(APIModel):
     artists: list[Artist]
     album: str
     cover_art: str
+    preview: str
+    user: str | None = None
 
 @dataclass
 class User(APIModel):
@@ -39,6 +41,8 @@ class User(APIModel):
 
     def get_top_tracks(self, amount: int = 50) -> list[Track]:
         self.top_tracks = self._client.get_top_tracks_from_user(self, amount)
+        for track in self.top_tracks:
+            track.user = self.email
         return self.top_tracks
 
 class Client(Protocol):

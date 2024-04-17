@@ -167,18 +167,15 @@ class SpotifyClient(Client, LoadFromEnvMixin):
             
             if resp['total'] < amount:
                 current_app.logger.info(
-                    f"User {user.email}'s top tracks from last month arent enough. "
+                    f"User {user.email}'s top tracks from last month arent enough."
                     f"Amount requested: {amount}, total: {resp['total']}.")
-                
+                time_range = 'medium_term'
                 continue
                 
-
             tracks += [SpotifyTrack.from_api_response(track) for track in resp["items"]]
             offset += limit
             remaining -= limit
         
-        if len(tracks) < amount:
-            pass
         return tracks
     
 SpotifyUser._client_cls = SpotifyClient
