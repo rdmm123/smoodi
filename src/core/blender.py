@@ -30,10 +30,8 @@ For each iteration:
 """
 
 import random
-import click
 from collections.abc import Collection
 from collections import deque
-from typing import TypedDict
 
 from core.client.base import User, Client, Track
 

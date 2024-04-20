@@ -1,0 +1,8 @@
+node_modules
+.dockerignore
+env_*/
+.gitignore
+.vscode
+Dockerfile
+Dockerfile.fe
+Dockerfile.prod

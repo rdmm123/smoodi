@@ -62,6 +62,8 @@ def login(encoded_email: str | None) -> ResponseReturnValue:
 def logout() -> ResponseReturnValue:
     resp = make_response(redirect(url_for('frontend.catch_all')))
     session.clear()
+    # TODO: fix this to only work with current user instead of flushing all cache
+    # If we keep user email in session we just need to check it and log out
     storage.flush(response=resp)
     return resp
 

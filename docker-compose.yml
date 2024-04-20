@@ -12,6 +12,15 @@ services:
       - .env
     volumes:
       - ./src:/app/src
+  frontend:
+    image: blendify-fe
+    build:
+      context: .
+      dockerfile: ./Dockerfile.fe
+    ports:
+      - 5001:5001
+    volumes:
+      - ./src/frontend:/app/src/frontend
   cache:
     image: redis:latest
     ports:

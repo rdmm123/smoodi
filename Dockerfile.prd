@@ -1,0 +1,5 @@
+# TODO
+# Multi step docker
+# first step, build frontend
+# second step, build and run backend, copy from frontend
+# third step: enjoy!
