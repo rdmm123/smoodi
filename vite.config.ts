@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react-swc'
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
+  const protocol = mode == 'development' ? 'http' : 'https'
   return {
     plugins: [react()],
     root: './src/frontend',
@@ -21,7 +22,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     define: {
-      BACKEND_HOST: JSON.stringify(env.VITE_BACKEND_HOST)
+      BACKEND_HOST: JSON.stringify(protocol + '://' + env.VITE_BACKEND_HOST)
     }
   }
 })

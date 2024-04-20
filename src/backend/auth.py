@@ -1,7 +1,6 @@
 import base64
-import click
 import json
-import time
+
 import datetime as dt
 from flask import Blueprint, redirect, session, request, url_for, make_response
 from flask.typing import ResponseReturnValue
@@ -47,6 +46,7 @@ def login(encoded_email: str | None) -> ResponseReturnValue:
             user.load_auth_data_from_response(new_auth_data)
             storage.write(f'user:{user.email}', json.dumps(asdict(user)))
         
+        session['email'] = user.email
         return redirect(url_for('frontend.catch_all'))
 
     state = get_random_string(16)
@@ -61,10 +61,11 @@ def login(encoded_email: str | None) -> ResponseReturnValue:
 @bp.route("/logout")
 def logout() -> ResponseReturnValue:
     resp = make_response(redirect(url_for('frontend.catch_all')))
+    logged_in_user = session.get('email')
+    if not logged_in_user:
+        return resp
+    storage.delete(f"user:{logged_in_user}")
     session.clear()
-    # TODO: fix this to only work with current user instead of flushing all cache
-    # If we keep user email in session we just need to check it and log out
-    storage.flush(response=resp)
     return resp
 
 @bp.route("/callback")
@@ -103,6 +104,6 @@ def callback() -> ResponseReturnValue:
     resp = make_response(redirect(redirect_to))
     storage.write(f'user:{user.email}', json.dumps(asdict(user)), response=resp)
 
+    session['email'] = user.email
     del session['state']
-    del session['email']
     return resp
