@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, redirect
 from flask.typing import ResponseReturnValue
 
-bp = Blueprint('frontend', __name__,  static_folder='../frontend')
+bp = Blueprint('frontend', __name__,  static_folder='../frontend/dist')
 
 @bp.route('/', defaults={'path': ''})
 @bp.route('/<path:path>')
