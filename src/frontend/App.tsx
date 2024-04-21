@@ -1,12 +1,19 @@
+import { Outlet, Link } from "react-router-dom";
+
 export default function App() {
   return (
     <>
-      <h1>Hello blendify!</h1>
-      <h2><a href={BACKEND_HOST + '/auth/login'}>Log In</a></h2>
-      <h2><a href={BACKEND_HOST + '/auth/logout'}>Log Out</a></h2>
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+    <section className="flex flex-row p-5 bg-slate-100 items-center" id="header">
+      <Link to={`/`} className="grow text-4xl font-bold">Blendify</Link>
+      {/* TODO: Create button component */}
+      <a className="mx-5 py-2 px-4 text-xl bg-blue-500 hover:bg-blue-700 rounded-xl text-white" href={BACKEND_HOST + '/auth/login'}>Log In</a>
+      <a className="py-2 px-4 text-xl hover:bg-red-100 rounded-xl text-red-500 border-2 border-red-500" href={BACKEND_HOST + '/auth/logout'}>Log Out</a>
+    </section>
+    <section className="p-10 flex justify-center items-center" id="content">
+      <div className="">
+        <Outlet />
+      </div>
+    </section>
     </>
   )
 }

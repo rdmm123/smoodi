@@ -7,6 +7,8 @@ import {
 
 import App from 'App'
 import ErrorPage from 'error-page';
+import Landing from 'components/Landing';
+import Blender from 'components/Blender';
 import './index.css'
 
 const router = createBrowserRouter([
@@ -14,6 +16,16 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/",
+        element: <Landing />,
+      },
+      {
+        path: "/blender",
+        element: <Blender />,
+      },
+    ]
   },
 ]);
 
