@@ -3,6 +3,8 @@ FROM node:18-alpine
 WORKDIR /app
 COPY ./*.json /app
 COPY ./*.ts /app
+COPY ./*.js /app
+
 COPY ./src/frontend /app/src/frontend
 COPY .env /app
 

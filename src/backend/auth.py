@@ -30,7 +30,7 @@ def login(encoded_email: str | None) -> ResponseReturnValue:
     if encoded_email:
         email = base64.urlsafe_b64decode(encoded_email + '==').decode()
         if not is_email_valid(email):
-            return redirect(url_for('frontend.catch_all') + 'login_result?' + \
+            return redirect(url_for('frontend.catch_all') + '?' + \
                             urlencode({'error': f'email {email} is not valid'}))
         existing_data = storage.read(f'user:{email}')
     
@@ -74,7 +74,7 @@ def callback() -> ResponseReturnValue:
     state = request.args.get('state', '')
     error = request.args.get('error', '')
 
-    redirect_to = url_for('frontend.catch_all') + 'login_result/'
+    redirect_to = url_for('frontend.catch_all')
 
     if not state or state != session['state']:
         del session['state']
