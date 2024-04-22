@@ -102,4 +102,5 @@ def callback() -> ResponseReturnValue:
         return resp # TODO: change to redirect to login_result
 
     session['user_id'] = user.id
+    session.permanent = True
     return resp
