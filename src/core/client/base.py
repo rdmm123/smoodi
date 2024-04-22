@@ -29,6 +29,7 @@ class Track(APIModel):
 class User(APIModel):
     name: str
     email: str
+    id: str | None = None
     token: str = ''
     refresh_token: str = ''
     token_expires: str = ''

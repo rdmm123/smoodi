@@ -8,7 +8,7 @@ from core.client.spotify.models import SpotifyUser
 from core.storage.cache_storage import CacheStorage
 from core.repositories.user_repository import UserRepository, InvalidJsonException
 
-KEYS_TO_EXLUDE_FROM_USER = ('token', 'refresh_token', 'token_expires')
+KEYS_TO_EXLUDE_FROM_USER = ('token', 'refresh_token', 'token_expires', 'top_tracks')
 
 client = SpotifyClient()
 storage = CacheStorage()

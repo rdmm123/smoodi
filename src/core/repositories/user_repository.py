@@ -1,5 +1,6 @@
 import json
 from typing import Type, TypeVar, Generic
+from flask import current_app
 from collections.abc import Collection
 
 from core.storage.cache_storage import CacheStorage
@@ -52,10 +53,15 @@ class UserRepository(Generic[UserClassT]):
         return user_id, self.get_user(user_id)
     
     def get_users(self, user_ids: Collection[str]) -> list[UserClassT]:
-        users_raw: list[str] = self._storage.read_many(user_ids)
+        users_raw: list[str | None] = self._storage.read_many([
+            f'user:{u_id}' for u_id in user_ids
+        ])
+        current_app.logger.debug(f'users raw {users_raw}')
         users: list[UserClassT] = []
 
         for user_raw in users_raw:
+            if user_raw is None:
+                continue
             users.append(self._get_user_object(user_raw))
 
         return users
@@ -76,9 +82,9 @@ class UserRepository(Generic[UserClassT]):
         
         return users
     
-    def save_user(self, user_id: str, user: UserClassT) -> None:
-        self._storage.write(f'user:{user_id}', json.dumps(asdict(user)))
-        self._storage.write(f'user:email:{user.email}', user_id)
+    def save_user(self, user: UserClassT) -> None:
+        self._storage.write(f'user:{user.id}', json.dumps(asdict(user)))
+        self._storage.write(f'user:email:{user.email}', user.id)
 
     def delete_user(self, user_id: str) -> None:
         user = self.get_user(user_id)
