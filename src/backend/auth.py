@@ -16,46 +16,26 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 client = SpotifyClient()
 storage = CacheStorage()
 
-# Consider not requiring email for secondary users
-# In case main user doesn't know the email. I could link the link (lol) to the
-# main user somehow instead. Or maybe create like a session code in which 
-# people join? But obviously not known to people and just stored in the backend
-# or maybe just do it hacky and have a set 'email' like 'unknown' and that way
-# we know its not main user and we simply don't know the email for now
 @bp.route("/login", defaults={'encoded_email': None})
 @bp.route("/login/<encoded_email>")
 def login(encoded_email: str | None) -> ResponseReturnValue:
-    email = None
-    existing_data = None
-    if encoded_email:
-        email = base64.urlsafe_b64decode(encoded_email + '==').decode()
-        if not is_email_valid(email):
-            return redirect(url_for('frontend.catch_all') + '?' + \
-                            urlencode({'error': f'email {email} is not valid'}))
-        existing_data = storage.read(f'user:{email}')
-    
-    if existing_data:
-        user = SpotifyUser(**json.loads(existing_data))
-
-        new_auth_data = client.handle_token_refresh(
-            user.token,
-            user.refresh_token,
-            dt.datetime.fromisoformat(user.token_expires))
+    if encoded_email is not None: # Link is shared by the user creating the blend (main user)
+        main_user_email = base64.urlsafe_b64decode(encoded_email + '==').decode()
+        if not is_email_valid(main_user_email):
+            return redirect(url_for('frontend.catch_all') + '?' +
+                            urlencode({'error': f'email {main_user_email} is not valid'}))
         
-        if new_auth_data['refreshed']:
-            user.load_auth_data_from_response(new_auth_data)
-            storage.write(f'user:{user.email}', json.dumps(asdict(user)))
-        
-        session['email'] = user.email
-        return redirect(url_for('frontend.catch_all'))
+        existing_data = storage.read(f'user:{main_user_email}')
+        if not existing_data:
+            return redirect(url_for('frontend.catch_all') + '?' +
+                            urlencode({'error': 'Main user not logged in.'}))
+        session['main_user_email'] = main_user_email
 
     state = get_random_string(16)
     auth_url = client.generate_auth_url(
         get_absolute_url_for('auth.callback'), state)
     
     session['state'] = state
-    session['email'] = email
-
     return redirect(auth_url)
 
 @bp.route("/logout")
@@ -65,6 +45,7 @@ def logout() -> ResponseReturnValue:
     if not logged_in_user:
         return resp
     storage.delete(f"user:{logged_in_user}")
+    storage.delete(f"session:{logged_in_user}")
     session.clear()
     return resp
 
@@ -78,14 +59,16 @@ def callback() -> ResponseReturnValue:
 
     if not state or state != session['state']:
         del session['state']
-        del session['email']
+        if 'main_user_email' in session:
+            del session['main_user_email']
         return redirect(redirect_to + '?' + urlencode({
             'error': 'state_mismatch'
         }))
     
     if error and not code:
         del session['state']
-        del session['email']
+        if 'main_user_email' in session:
+            del session['main_user_email']
         return redirect(redirect_to + '?' + urlencode({
             'error': error
         }))
@@ -96,14 +79,21 @@ def callback() -> ResponseReturnValue:
     user = client.get_user(auth_resp['token'])
     user.load_auth_data_from_response(auth_resp)
     
-    if session['email'] and session['email'] != user.email:
-        return redirect(redirect_to + '?' + urlencode({
-            'error': 'email_mismatch'
-        }))
-    
     resp = make_response(redirect(redirect_to))
     storage.write(f'user:{user.email}', json.dumps(asdict(user)), response=resp)
 
-    session['email'] = user.email
     del session['state']
+
+    if 'main_user_email' in session:
+        current_session_key = f"session:{session['main_user_email']}"
+        current_session: list = json.loads(storage.read(current_session_key) or '[]')
+
+        if user.email not in current_session:
+            current_session.append(user.email)
+            storage.write(f'session:{session['main_user_email']}', json.dumps(current_session))
+
+        del session['main_user_email']
+        return resp # TODO: change to redirect to login_result
+
+    session['email'] = user.email
     return resp
