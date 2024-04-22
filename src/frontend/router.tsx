@@ -2,8 +2,7 @@ import { createBrowserRouter, RouteObject } from 'react-router-dom';
 import App from 'components/App';
 import ErrorPage from 'pages/ErrorPage';
 import HomePage from 'pages/HomePage';
-import Blender from 'components/Blender';
-import LoginResultPage from 'pages/LoginResultPage';
+import BlenderPage from 'pages/BlenderPage';
 
 const routes: RouteObject[] = [
   {
@@ -17,7 +16,7 @@ const routes: RouteObject[] = [
       return { error };
     },
     
-    errorElement: <ErrorPage />,
+    // errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -25,7 +24,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "/blender",
-        element: <Blender />,
+        element: <BlenderPage />,
       }
     ]
   }
