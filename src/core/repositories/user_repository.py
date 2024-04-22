@@ -56,7 +56,6 @@ class UserRepository(Generic[UserClassT]):
         users_raw: list[str | None] = self._storage.read_many([
             f'user:{u_id}' for u_id in user_ids
         ])
-        current_app.logger.debug(f'users raw {users_raw}')
         users: list[UserClassT] = []
 
         for user_raw in users_raw:

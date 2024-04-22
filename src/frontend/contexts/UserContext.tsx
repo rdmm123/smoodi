@@ -37,7 +37,7 @@ export function UserContextProvider({ children } : { children: React.ReactNode }
     if (user.id) {
       fetchSession()
     }
-  }, [refreshSession])
+  }, [refreshSession, user])
 
   return (
     <UserContext.Provider

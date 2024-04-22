@@ -26,3 +26,7 @@ export interface UserResponse {
 export interface UserSessionResponse {
     session: User[]
 }
+
+export interface BlendResponse {
+    playlist: Track[]
+}
