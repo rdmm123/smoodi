@@ -12,9 +12,9 @@ function Header() {
       <Link to={`/`} className="grow">
         <img src={BlendifyLogo} alt="Blendify logo" className="w-40" />
       </Link>
-      {user
+      {user?.email
       ? <div className="flex items-center gap-5">
-          <h1 className="text-lg">Logged in as: <span className="underline text-blue-500">{user}</span></h1>
+          <h1 className="text-lg">Logged in as: <span className="underline text-blue-500">{user.email}</span></h1>
           <AnchorButton href={BACKEND_HOST + "/auth/logout"} color="red" light={true}>
             Log Out
           </AnchorButton>

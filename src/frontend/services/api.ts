@@ -1,11 +1,10 @@
+import { UserResponse } from "./api.types";
+
 const API_URL = BACKEND_HOST + '/api';
 
-interface CurrentUserResponse {
-    current_user: string
-}
 export const fetchCurrentUser = async () => {
-    const response = await fetch(API_URL + '/current_user', {credentials: 'include'})
+    const response = await fetch(API_URL + '/users/me', {credentials: 'include'})
 
-    const currentUserResponse: CurrentUserResponse = await response.json()
-    return currentUserResponse.current_user
+    const userResponse: UserResponse = await response.json()
+    return userResponse.user;
 }

@@ -1,8 +1,9 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { fetchCurrentUser } from "services/api";
+import { User } from "services/api.types";
 
 interface UserData {
-  user: string | null
+  user: User | null
   session: string[],
   refreshSession: boolean | null
   setRefreshSession: React.Dispatch<React.SetStateAction<boolean>> | null
@@ -13,10 +14,10 @@ const UserContext = createContext(initialContext)
 
 export function UserContextProvider({ children } : { children: React.ReactNode }) {
 
-  const [user, setUser] = useState("");
+  const initialUser: User = { name: '', email: '', top_tracks: []}
+  const [user, setUser] = useState(initialUser);
 
   useEffect(() => {
-    console.log('fetching user')
     const fetchUser = async () => {
         const user = await fetchCurrentUser();
         setUser(user);
