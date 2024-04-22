@@ -6,7 +6,9 @@ from dataclasses import asdict
 from core.client.spotify.spotify_client import SpotifyClient
 from core.client.spotify.models import SpotifyUser
 from core.storage.cache_storage import CacheStorage
-from core.repositories.user_repository import UserRepository, InvalidUserException
+from core.repositories.user_repository import UserRepository, InvalidJsonException
+
+KEYS_TO_EXLUDE_FROM_USER = ('token', 'refresh_token', 'token_expires')
 
 client = SpotifyClient()
 storage = CacheStorage()
@@ -14,21 +16,21 @@ user_repository = UserRepository(user_cls=SpotifyUser)
 
 bp = Blueprint('api', __name__, url_prefix='/api')
 
-@bp.route('/users/<user_email>')
-def get_user(user_email: str) -> ResponseReturnValue:
-    if user_email == 'me':
-        user_email = session.get('email', '')
+@bp.route('/users/<user_id>')
+def get_user(user_id: str) -> ResponseReturnValue:
+    if user_id == 'me':
+        user_id = session.get('user_id', '')
 
     try:
-        user = user_repository.get_user(user_email)
-    except InvalidUserException:
+        user = user_repository.get_user(user_id)
+    except InvalidJsonException:
         return {
-            'message': f'User {user_email} data has an invalid format.'
+            'message': f'User {user_id} data has an invalid format.'
         }, 400
 
     if not user:
         return {
-            'message': f'User {user_email} not found!'
+            'message': f'User {user_id} not found!'
         }, 404
     
     new_auth_data = client.handle_token_refresh(user.token,
@@ -47,6 +49,22 @@ def get_user(user_email: str) -> ResponseReturnValue:
         'user': user_dict
     }
 
-@bp.route('/users/<user_email>/session')
-def user_session(user_email: str) -> ResponseReturnValue:
-    return ""
+@bp.route('/users/<user_id>/session')
+def user_session(user_id: str) -> ResponseReturnValue:
+    try:
+        session = user_repository.get_user_session(user_id)
+    except InvalidJsonException:
+        return {
+            'message': f'User {user_id} data has an invalid format.'
+        }, 400
+    
+    session_dict: list[dict[str, str]] = []
+    for user in session:
+        user_dict = asdict(user)
+        for key in KEYS_TO_EXLUDE_FROM_USER:
+            del user_dict[key]
+        session_dict.append(user_dict)
+
+    return {
+        'session': session_dict
+    }

@@ -1,5 +1,5 @@
 import redis
-from typing import Any
+from typing import Any, Collection
 from flask import session
 
 from core.storage.base import Storage
@@ -24,6 +24,9 @@ class CacheStorage(Storage, LoadFromEnvMixin):
     def read(self, source: str, **params: Any) -> Any:
         return self.cache_client.get(source)
     
+    def read_many(self, sources: Collection[str], **params: Any) -> Any:
+        return self.cache_client.mget(sources)
+
     def delete(self, where: str, **params: Any) -> None:
         self.cache_client.delete(where)
         
