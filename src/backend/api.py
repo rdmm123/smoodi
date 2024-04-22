@@ -4,6 +4,7 @@ bp = Blueprint('api', __name__, url_prefix='/api')
 @bp.route('/current_user')
 def current_user():
     current_user = session.get('email')
+    # TODO: Handle token refresh here
     return {
         'current_user': current_user
     }

@@ -2,6 +2,8 @@ import { Link } from "react-router-dom"
 import BlendifyLogo from 'assets/blendify-logo.svg'
 import { useUserContext } from "contexts/UserContext"
 
+import AnchorButton from "components/Button/AnchorButton";
+
 function Header() {
   const { user } = useUserContext();
 
@@ -11,16 +13,15 @@ function Header() {
         <img src={BlendifyLogo} alt="Blendify logo" className="w-40" />
       </Link>
       {user
-      ? <a
-          className="py-2 px-4 text-xl hover:bg-red-100 rounded-xl text-red-500 border-2 border-red-500"
-          href={BACKEND_HOST + '/auth/logout'}>
-          Log Out
-        </a>
-      : <a
-          className="mx-5 py-2 px-4 text-xl bg-blue-500 hover:bg-blue-700 rounded-xl text-white"
-          href={BACKEND_HOST + '/auth/login'}>
+      ? <div className="flex items-center gap-5">
+          <h1 className="text-lg">Logged in as: <span className="underline text-blue-500">{user}</span></h1>
+          <AnchorButton href={BACKEND_HOST + "/auth/logout"} color="red" light={true}>
+            Log Out
+          </AnchorButton>
+      </div>
+      : <AnchorButton href={BACKEND_HOST + "/auth/login"} color="blue" light={false}>
           Log In
-        </a>
+        </AnchorButton>
       }
 
     </section>
