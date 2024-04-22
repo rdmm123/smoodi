@@ -11,7 +11,7 @@ export default function App() {
     <UserContextProvider>
       <Header />
     
-      <section className="p-10 flex flex-col justify-center items-center" id="content">
+      <section className="p-10 flex flex-col justify-center items-center w-100" id="content">
 
         {error &&
           <div className="bg-red-200 outline outline-1 outline-red-500 text-red-500 rounded-xl p-3 text-center mb-5">

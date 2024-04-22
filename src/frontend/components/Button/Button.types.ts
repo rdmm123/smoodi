@@ -12,7 +12,8 @@ export interface ButtonProps {
     children?: React.ReactNode,
     color: ButtonColor,
     light: boolean,
-    className?: string
+    className?: string,
+    onClick?: Function
 }
 
 export interface LinkButtonProps extends ButtonProps {

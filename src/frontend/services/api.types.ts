@@ -14,11 +14,15 @@ export interface Track {
 }
 
 export interface User {
+    id: string
     name: string
     email: string
-    top_tracks: Track[]
 }
 
 export interface UserResponse {
     user: User
+}
+
+export interface UserSessionResponse {
+    session: User[]
 }
