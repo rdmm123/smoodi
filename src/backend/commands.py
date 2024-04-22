@@ -9,11 +9,13 @@ from dataclasses import asdict
 from core.storage.cache_storage import CacheStorage
 from core.client.spotify.models import SpotifyUser
 from core.client.spotify.spotify_client import SpotifyClient
+from core.repositories.user_repository import UserRepository
 from core.helpers import is_email_valid
 from core.blender import Blender
 
 client = SpotifyClient()
 storage = CacheStorage()
+user_repository = UserRepository(SpotifyUser)
 
 bp = Blueprint('commands', __name__)
 @bp.cli.command('test-app-flow')
@@ -27,13 +29,12 @@ def test_app_flow() -> None:
         
         while not user_logged_in and attempt_count < attempts:
             time.sleep(sleep_seconds)
-            user_data = storage.read(f'user:{email}')
+            user = user_repository.get_user(email)
 
-            if user_data is None:
+            if user is None:
                 user_logged_in = False
                 continue
 
-            user = SpotifyUser(**json.loads(user_data))
             token_expired = dt.datetime.now() > dt.datetime.fromisoformat(user.token_expires)
 
             user_logged_in = not token_expired
@@ -51,8 +52,10 @@ def test_app_flow() -> None:
 
     if not check_for_user_login(main_user_email):
         return
-    
-    users.append(SpotifyUser(**json.loads(storage.read(f'user:{main_user_email}'))))
+
+    main_user = user_repository.get_user(main_user_email)
+    if main_user is not None:
+        users.append(main_user)
 
     click.echo("Now to add the rest of the users to the blend...")
     add_new_user = True
@@ -71,7 +74,9 @@ def test_app_flow() -> None:
         if not check_for_user_login(new_user_email):
             return
         
-        users.append(SpotifyUser(**json.loads(storage.read(f'user:{new_user_email}'))))
+        new_user = user_repository.get_user(new_user_email)
+        if new_user is not None:
+            users.append(new_user)
 
         add_new_user = click.confirm("Do you wish to add another user?")
 

@@ -85,7 +85,7 @@ def callback() -> ResponseReturnValue:
 
     if 'main_user_email' in session:
         current_session_key = f"session:{session['main_user_email']}"
-        current_session: list = json.loads(storage.read(current_session_key) or '[]')
+        current_session: list[str] = json.loads(storage.read(current_session_key) or '[]')
 
         if user.email not in current_session:
             current_session.append(user.email)
