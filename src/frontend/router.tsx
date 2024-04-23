@@ -2,8 +2,20 @@ import { createBrowserRouter, redirect, RouteObject } from 'react-router-dom';
 import App from 'components/App';
 import ErrorPage from 'pages/ErrorPage';
 import HomePage from 'pages/HomePage';
-import BlenderPage from 'pages/BlenderPage';
+import SessionPage from "pages/SessionPage";
+import BlendifyPage from 'pages/BlendifyPage';
 import { fetchCurrentUser } from 'services/api';
+
+const userLoader = async () => {
+  // TODO: check if this generates a duplicate call with the context
+  const user = await fetchCurrentUser();
+
+  if (!user) {
+    return redirect('/')
+  }
+
+  return null;
+}
 
 const routes: RouteObject[] = [
   {
@@ -24,18 +36,14 @@ const routes: RouteObject[] = [
         element: <HomePage />,
       },
       {
-        path: "/blender",
-        element: <BlenderPage />,
-        loader: async () => {
-          // TODO: check if this generates a duplicate call with the context
-          const user = await fetchCurrentUser();
-
-          if (!user) {
-            return redirect('/')
-          }
-
-          return null;
-        }
+        path: "/session",
+        element: <SessionPage />,
+        loader: userLoader
+      },
+      {
+        path: "/blendify",
+        element: <BlendifyPage />,
+        loader: userLoader
       }
     ]
   }

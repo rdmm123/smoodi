@@ -9,6 +9,7 @@ from core.helpers import get_missing_keys, LoadFromEnvMixin
 from core.client.base import Client, SUCCESS_STATUSES
 from core.client.spotify.models import SpotifyUser, SpotifyTrack
 
+# TODO: use cache to save requests made
 class SpotifyClient(Client, LoadFromEnvMixin):
     SPOTIFY_AUTH_URL = 'https://accounts.spotify.com'
     SPOTIFY_API_URL = 'https://api.spotify.com/v1'

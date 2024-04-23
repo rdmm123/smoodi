@@ -14,7 +14,6 @@ UserClassT = TypeVar("UserClassT", bound=User)
 class InvalidJsonException(Exception):
     pass
 
-# TODO: repository to handle reading/writing users from/to storage
 class UserRepository(Generic[UserClassT]):
     _storage_cls: Type[Storage]
 

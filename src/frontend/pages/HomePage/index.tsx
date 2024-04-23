@@ -7,7 +7,7 @@ function HomePage() {
   return user?.email
   ? <>
       <h1 className="text-7xl">Ready to start blendin'?</h1>
-      <LinkButton to="/blender" color="green" light={false} className="text-3xl mt-5">Get Started</LinkButton>
+      <LinkButton to="/session" color="green" light={false} className="text-3xl mt-5">Get Started</LinkButton>
     </>
   : <>
       <h1 className="text-7xl">Log in to get started.</h1>
