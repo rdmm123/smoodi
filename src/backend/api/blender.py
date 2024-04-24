@@ -19,6 +19,7 @@ bp = Blueprint('blender', __name__, url_prefix='/blender')
 @bp.route('/blend', methods=['POST'])
 def blend() -> ResponseReturnValue:
     body = request.get_json()
+    create = body.get('create', False)
 
     if 'users' not in body or not body['users']:
         return {
@@ -49,8 +50,9 @@ def blend() -> ResponseReturnValue:
     if 'playlist_length' in body and body['playlist_length']:
         blender.playlist_length = body['playlist_length']
 
-    playlist = blender.blend()
-
+    playlist = blender.blend(create=create)
+    
+    # Create playlist here
     return {
         'playlist': playlist
     }

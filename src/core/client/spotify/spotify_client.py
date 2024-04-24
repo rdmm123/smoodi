@@ -179,4 +179,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         
         return tracks
     
+    def create_playlist(self, name: str, public: bool, collaborative: bool, description: bool):
+        resp = self._make_request('post', ['id'])
+    
 SpotifyUser._client_cls = SpotifyClient

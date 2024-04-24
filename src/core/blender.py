@@ -85,7 +85,6 @@ class Blender:
                 all_tracks[:songs], all_tracks[songs:]
             )
 
-
     def _all_stacks_empty(self) -> bool:
         return all(len(sh.stack) == 0 for sh in self._stacks_per_user.values())
     
@@ -100,11 +99,20 @@ class Blender:
 
         return remaining_users
 
-    def blend(self) -> list[Track]:
+    def _create_playlist(self):
+        pass
+
+    def blend(self, create=False) -> list[Track]:
         if len(self.playlist) == self.playlist_length:
+            if create:
+                pass
+
             return self.playlist
 
         if self._all_stacks_empty():
+            if create:
+                pass
+
             return self.playlist
 
         current_tops: dict[str, Track] = {}

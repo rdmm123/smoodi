@@ -18,7 +18,8 @@ class Artist(APIModel):
 @dataclass
 class Track(APIModel):
     name: str
-    url: str
+    external_url: str
+    uri: str
     artists: list[Artist]
     album: str
     cover_art: str

@@ -8,7 +8,7 @@ export default function Button({ children, light, color, className: customClasse
     onClick(e)
   }
 
-  const btnClass = classNames(colorClassMapping(light)[color], 'py-2 px-4 text-xl rounded-xl', {
+  const btnClass = classNames(colorClassMapping(light)[color], 'py-2 px-5 text-xl rounded-xl', {
     'border-2': light,
     'text-white': !light
   })

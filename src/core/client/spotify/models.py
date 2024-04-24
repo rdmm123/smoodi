@@ -38,7 +38,8 @@ class SpotifyTrack(Track):
     def from_api_response(cls, response: Dict[str, Any]) -> Self:
         return cls(
             name=response['name'],
-            url=response["external_urls"]["spotify"],
+            external_url=response["external_urls"]["spotify"],
+            uri=response["uri"],
             artists=[SpotifyArtist.from_api_response(a) for a in response["album"]["artists"]],
             album=response["album"]["name"],
             cover_art=response["album"]["images"][0]["url"],
