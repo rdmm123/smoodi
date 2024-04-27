@@ -99,20 +99,11 @@ class Blender:
 
         return remaining_users
 
-    def _create_playlist(self):
-        pass
-
-    def blend(self, create=False) -> list[Track]:
+    def blend(self) -> list[Track]:
         if len(self.playlist) == self.playlist_length:
-            if create:
-                pass
-
             return self.playlist
 
         if self._all_stacks_empty():
-            if create:
-                pass
-
             return self.playlist
 
         current_tops: dict[str, Track] = {}

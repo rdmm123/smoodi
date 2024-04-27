@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Protocol, Any, Self, ClassVar, Type
 
-SUCCESS_STATUSES = [200]
+SUCCESS_STATUSES = [200, 201]
 
 class APIModel:
     @classmethod
@@ -30,6 +30,7 @@ class Track(APIModel):
 class User(APIModel):
     name: str
     email: str
+    api_id: str
     id: str | None = None
     token: str = ''
     refresh_token: str = ''
@@ -46,6 +47,19 @@ class User(APIModel):
         for track in self.top_tracks:
             track.user = self.id
         return self.top_tracks
+    
+@dataclass
+class Playlist(APIModel):
+    tracks: list[Track]
+    id: str = ''
+    href: str = ''
+    uri: str = ''
+    external_url: str = ''
+    name: str = ''
+    description: str = ''
+    owner: str = ''
+    public: bool = False
+    collaborative: bool = False
 
 class Client(Protocol):
     """This is an interface for API Clients for music streaming services"""

@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from flask.typing import ResponseReturnValue
 
 from core.client.spotify.spotify_client import SpotifyClient
-from core.client.spotify.models import SpotifyUser
+from core.client.spotify.models import SpotifyUser, SpotifyPlaylist, SpotifyTrack
 from core.storage.cache_storage import CacheStorage
 from core.repositories.user_repository import UserRepository
 from core.blender import Blender
@@ -35,7 +35,7 @@ def blend() -> ResponseReturnValue:
             }, 400
     
         new_auth_data = client.handle_token_refresh(
-            user.token,
+            user.token, 
             user.refresh_token,
             dt.datetime.fromisoformat(user.token_expires)
         )
@@ -50,9 +50,21 @@ def blend() -> ResponseReturnValue:
     if 'playlist_length' in body and body['playlist_length']:
         blender.playlist_length = body['playlist_length']
 
-    playlist = blender.blend(create=create)
-    
-    # Create playlist here
+    tracks = blender.blend()
+    playlist = SpotifyPlaylist(tracks=tracks)
+
+    if create:
+        playlist_name = 'Blendify - ' + ', '.join([u.name for u in users])
+        playlist = client.create_playlist(
+            user=user,
+            name=playlist_name, 
+            public=False,
+            collaborative=True,
+            description=playlist_name
+        )
+        client.update_playlist_tracks(user, playlist, tracks) # type: ignore
+        playlist.tracks = tracks
+
     return {
         'playlist': playlist
     }

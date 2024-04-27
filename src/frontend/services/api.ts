@@ -26,7 +26,7 @@ export const fetchUserSession = async ({ id }: User) => {
     return userSessionResponse.session;
 }
 
-export const createBlend = async (userIds: string[], playlistLength: number) => {
+export const createBlend = async (userIds: string[], playlistLength: number, create: boolean = false) => {
     const response = await fetch(`${API_URL}/blender/blend`, {
         method: 'POST',
         headers: {
@@ -34,12 +34,13 @@ export const createBlend = async (userIds: string[], playlistLength: number) => 
           },
         body: JSON.stringify({
             users: userIds,
-            playlist_length: playlistLength
+            playlist_length: playlistLength,
+            create: create
         })
     })
 
     if (!response.ok) {
-        return []
+        return { tracks: [] }
     }
 
     const blendResponse: BlendResponse = await response.json()

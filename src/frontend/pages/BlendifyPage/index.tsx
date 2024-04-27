@@ -1,8 +1,8 @@
 import { useUserContext } from "contexts/UserContext";
-import { FormEvent, useEffect, useState} from "react";
+import { useState, FormEvent, MouseEvent} from "react";
 import { createBlend } from "services/api";
 
-import { Track } from "services/api.types";
+import { Playlist as PlaylistType, Track } from "services/api.types";
 import Button from "components/Button/Button";
 import Playlist from "components/Playlist";
 import CurrentSession from "components/CurrentSession";
@@ -10,20 +10,34 @@ import CurrentSession from "components/CurrentSession";
 export default function BlendifyPage() {
   const { user, session } = useUserContext();
 
-  const initialPlaylist: Track[] = []
+  if (!user) {
+    return
+  }
+
+  const blendUserIds = session.map((sessionUser) => sessionUser.id);
+  blendUserIds.push(user.id)
+
+  const initialPlaylist: PlaylistType = {tracks: []}
   const [playlist, setPlaylist] = useState(initialPlaylist);
 
+  const [previewLoading, setPreviewLoading] = useState(false);
   const [blendLoading, setBlendLoading] = useState(false);
+  const [isPlaylistCreated, setIsPlaylistCreated] = useState(false);
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const blendUserIds = session.map((sessionUser) => sessionUser.id);
+    const previewPlaylist = await createBlend(blendUserIds, 100);
+    setPlaylist(previewPlaylist);
+    setIsPlaylistCreated(false);
+  }
 
-    if (!user) return;
-
-    blendUserIds.push(user.id)
-    const createdPlaylist = await createBlend(blendUserIds, 100);
-    setPlaylist(createdPlaylist)
+  const handlePlaylistConfirm = async(e: MouseEvent) => {    
+    e.preventDefault();
+    const createdPlaylist = await createBlend(blendUserIds, 100, true);
+    if (createdPlaylist.id) {
+      setIsPlaylistCreated(true);
+      setPlaylist(createdPlaylist);
+    }
   }
 
   return <>
@@ -41,6 +55,12 @@ export default function BlendifyPage() {
       </form>
       <CurrentSession />
     </div>
-      {playlist.length > 0 && <Playlist tracks={playlist}/>}
+      {(playlist.tracks.length > 0 && !isPlaylistCreated) && <Playlist tracks={playlist.tracks} onConfirm={handlePlaylistConfirm}/>}
+      {
+        isPlaylistCreated &&
+        <div>
+          Playlist Created, <a href={playlist.external_url}>link</a>
+        </div>
+      }
   </>
 }

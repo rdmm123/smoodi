@@ -2,7 +2,7 @@ import datetime as dt
 from dataclasses import dataclass
 from typing import Dict, Any, Self
 
-from core.client.base import User, Artist, Track
+from core.client.base import User, Artist, Track, Playlist
 
 
 @dataclass
@@ -11,7 +11,8 @@ class SpotifyUser(User):
     def from_api_response(cls, response: Dict[str, Any]) -> Self:
         return cls(
             name=response['display_name'],
-            email=response['email']
+            email=response['email'],
+            api_id=response['id']
         )
     
     def load_auth_data_from_response(self, auth_response: Dict[str, Any]) -> None:
@@ -31,7 +32,6 @@ class SpotifyArtist(Artist):
             url=response["external_urls"]["spotify"]
         )
 
-
 @dataclass
 class SpotifyTrack(Track):
     @classmethod
@@ -44,4 +44,21 @@ class SpotifyTrack(Track):
             album=response["album"]["name"],
             cover_art=response["album"]["images"][0]["url"],
             preview=response["preview_url"]
+        )
+
+@dataclass
+class SpotifyPlaylist(Playlist):
+    @classmethod
+    def from_api_response(cls, response: Dict[str, Any]) -> Self:
+        return cls(
+            id=response['id'],
+            href=response['href'],
+            uri=response['uri'],
+            name=response['name'],
+            description=response['description'],
+            external_url=response['external_urls']['spotify'],
+            owner=response['owner']['display_name'],
+            tracks=[SpotifyTrack.from_api_response(t['track']) for t in response['tracks']['items']],
+            public=response['public'],
+            collaborative=response['collaborative']
         )

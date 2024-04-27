@@ -17,6 +17,10 @@ export function UserContextProvider({ children } : { children: React.ReactNode }
   const initialUser: User = { name: '', email: '', id: ''}
   const [user, setUser] = useState(initialUser);
 
+  const initialSession: User[] = []
+  const [session, setSession] = useState(initialSession);
+  const [refreshSession, setRefreshSession] = useState(false);
+
   useEffect(() => {
     const fetchUser = async () => {
         const user = await fetchCurrentUser();
@@ -24,10 +28,6 @@ export function UserContextProvider({ children } : { children: React.ReactNode }
     }
     fetchUser();
   }, [])
-
-  const initialSession: User[] = []
-  const [session, setSession] = useState(initialSession);
-  const [refreshSession, setRefreshSession] = useState(false);
 
   useEffect(() => {
     const fetchSession = async () => {

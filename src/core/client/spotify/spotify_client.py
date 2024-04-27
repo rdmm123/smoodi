@@ -4,10 +4,11 @@ import base64
 from urllib.parse import urlencode
 from typing import Any, Iterable
 from flask import current_app
+from collections.abc import Collection
 
 from core.helpers import get_missing_keys, LoadFromEnvMixin
 from core.client.base import Client, SUCCESS_STATUSES
-from core.client.spotify.models import SpotifyUser, SpotifyTrack
+from core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPlaylist
 
 # TODO: use cache to save requests made
 class SpotifyClient(Client, LoadFromEnvMixin):
@@ -179,7 +180,39 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         
         return tracks
     
-    def create_playlist(self, name: str, public: bool, collaborative: bool, description: bool):
-        resp = self._make_request('post', ['id'])
+    def create_playlist(self,
+                        *,
+                        user: SpotifyUser,
+                        name: str,
+                        public: bool,
+                        collaborative: bool,
+                        description: str) -> SpotifyPlaylist:
+        
+        resp = self._make_request(
+            'post',
+            ['id'],
+            url=f'{self.SPOTIFY_API_URL}/users/{user.api_id}/playlists',
+            json={
+                'name': name,
+                'public': public,
+                'collaborative': collaborative,
+                'description': description
+            },
+            headers={'Authorization': f'Bearer {user.token}'}
+        )
+        
+        return SpotifyPlaylist.from_api_response(resp)
+
+    def update_playlist_tracks(self, user: SpotifyUser, playlist: SpotifyPlaylist, tracks: list[SpotifyTrack]) -> str:
+        resp = self._make_request(
+            'put',
+            ['snapshot_id'],
+            url=f'{self.SPOTIFY_API_URL}/playlists/{playlist.id}/tracks',
+            json={'uris': [t.uri for t in tracks]},
+            headers={'Authorization': f'Bearer {user.token}'}
+        )
+        
+        snapshot_id: str = resp['snapshot_id']
+        return snapshot_id
     
 SpotifyUser._client_cls = SpotifyClient

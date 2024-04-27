@@ -5,7 +5,8 @@ export interface Artist {
 
 export interface Track {
     name: string
-    url: string
+    external_url: string
+    uri: string
     artists: Artist[]
     album: string
     cover_art: string
@@ -27,6 +28,19 @@ export interface UserSessionResponse {
     session: User[]
 }
 
+export interface Playlist {
+    tracks: Track[]
+    id?: string
+    href?: string
+    uri?: string
+    external_url?: string
+    name?: string
+    description?: string
+    owner?: string
+    public?: boolean
+    collaborative?: boolean
+}
+
 export interface BlendResponse {
-    playlist: Track[]
+    playlist: Playlist
 }
