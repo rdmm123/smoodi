@@ -53,15 +53,15 @@ class StackHandler:
 
 
 class Blender:
-    _songs_per_user: int = 0
-    playlist: list[Track] = []
-
     def __init__(
         self,
         client: Client,
         users: Collection[User],
         playlist_length: int = DEFAULT_PLAYLIST_LENGTH,
     ) -> None:
+        self.playlist: list[Track] = []
+        self._songs_per_user: int = 0
+        
         self.users = {u.email: u for u in users}
         self.client = client
         self.playlist_length = playlist_length
