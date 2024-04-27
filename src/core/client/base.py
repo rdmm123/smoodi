@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Protocol, Any, Self, ClassVar, Type
+from typing import Protocol, Any, Self, ClassVar, Type, TypeVar
+from collections.abc import Sequence
 
 SUCCESS_STATUSES = [200, 201]
 
@@ -20,7 +21,7 @@ class Track(APIModel):
     name: str
     external_url: str
     uri: str
-    artists: list[Artist]
+    artists: Sequence[Artist]
     album: str
     cover_art: str
     preview: str
@@ -35,14 +36,14 @@ class User(APIModel):
     token: str = ''
     refresh_token: str = ''
     token_expires: str = ''
-    top_tracks: list[Track] = field(default_factory=list)
+    top_tracks: Sequence[Track] = field(default_factory=list)
 
     _client_cls: ClassVar[Type[Client]]
 
     def __post_init__(self) -> None:
         self._client = self._client_cls()
 
-    def get_top_tracks(self, amount: int = 50) -> list[Track]:
+    def get_top_tracks(self, amount: int = 50) -> Sequence[Track]:
         self.top_tracks = self._client.get_top_tracks_from_user(self, amount)
         for track in self.top_tracks:
             track.user = self.id
@@ -50,7 +51,7 @@ class User(APIModel):
     
 @dataclass
 class Playlist(APIModel):
-    tracks: list[Track]
+    tracks: Sequence[Track]
     id: str = ''
     href: str = ''
     uri: str = ''
@@ -61,6 +62,7 @@ class Playlist(APIModel):
     public: bool = False
     collaborative: bool = False
 
+
 class Client(Protocol):
     """This is an interface for API Clients for music streaming services"""
     def authenticate(self, **kwargs: Any) -> dict[str, Any]:
@@ -69,5 +71,17 @@ class Client(Protocol):
     def get_user(self, user_identifier: str) -> User:
         raise NotImplementedError()
     
-    def get_top_tracks_from_user(self, user: User, amount: int = 50) -> list[Track]:
+    def get_top_tracks_from_user(self, user: User, amount: int = 50) -> Sequence[Track]:
+        raise NotImplementedError()
+    
+    def create_playlist(self,
+                        *,
+                        user: User,
+                        name: str,
+                        public: bool,
+                        collaborative: bool,
+                        description: str) -> Playlist:
+        raise NotImplementedError()
+    
+    def update_playlist_tracks(self, user: User, playlist: Playlist, tracks: Sequence[Track]) -> Playlist:
         raise NotImplementedError()

@@ -61,7 +61,7 @@ def blend() -> ResponseReturnValue:
             collaborative=True,
             description=playlist_name
         )
-        client.update_playlist_tracks(user, playlist, tracks) # type: ignore
+        client.update_playlist_tracks(user, playlist, tracks)
         playlist.tracks = tracks
 
     return {

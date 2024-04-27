@@ -20,15 +20,14 @@ export default function BlendifyPage() {
 
   const initialPlaylist: PlaylistType = {tracks: []}
   const [playlist, setPlaylist] = useState(initialPlaylist);
+  const isPlaylistCreated = !!playlist.id;
 
   const [previewLoading, setPreviewLoading] = useState(false);
   const [blendLoading, setBlendLoading] = useState(false);
-  const [isPlaylistCreated, setIsPlaylistCreated] = useState(false);
-
+  
   const handleFormSubmit = async ({ formData }) => {
     const previewPlaylist = await createBlend(blendUserIds, parseInt(formData.playlistLength));
     setPlaylist(previewPlaylist);
-    setIsPlaylistCreated(false);
   }
 
   const handlePlaylistConfirm = async(e: MouseEvent) => {    
@@ -36,7 +35,6 @@ export default function BlendifyPage() {
 
     const createdPlaylist = await createBlend(blendUserIds, playlist.tracks.length, true);
     if (createdPlaylist.id) {
-      setIsPlaylistCreated(true);
       setPlaylist(createdPlaylist);
     }
   }
@@ -47,7 +45,8 @@ export default function BlendifyPage() {
       <PlaylistForm onSubmit={handleFormSubmit} />
       <CurrentSession />
     </div>
-      {(playlist.tracks.length > 0 && !isPlaylistCreated) && <Playlist tracks={playlist.tracks} onConfirm={handlePlaylistConfirm}/>}
+      {(playlist.tracks.length > 0 && !isPlaylistCreated) &&
+        <Playlist tracks={playlist.tracks} onConfirm={handlePlaylistConfirm}/>}
       {
         isPlaylistCreated &&
         <div>

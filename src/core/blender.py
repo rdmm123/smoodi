@@ -39,7 +39,7 @@ DEFAULT_PLAYLIST_LENGTH = 100
 
 
 class StackHandler:
-    def __init__(self, stack: list[Track] = [], pool: list[Track] = []) -> None:
+    def __init__(self, stack: Collection[Track] = [], pool: Collection[Track] = []) -> None:
         self.stack = deque(stack)
         self.pool = deque(pool)
         self.track_amount = len(stack) + len(pool)

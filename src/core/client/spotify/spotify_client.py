@@ -4,10 +4,10 @@ import base64
 from urllib.parse import urlencode
 from typing import Any, Iterable
 from flask import current_app
-from collections.abc import Collection
+from collections.abc import Sequence
 
 from core.helpers import get_missing_keys, LoadFromEnvMixin, truncate_text
-from core.client.base import Client, SUCCESS_STATUSES
+from core.client.base import Client, SUCCESS_STATUSES, Track, User, Playlist
 from core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPlaylist
 
 # TODO: use cache to save requests made
@@ -37,12 +37,12 @@ class SpotifyClient(Client, LoadFromEnvMixin):
                       keys_to_check: Iterable[str] = [],
                       **request_kwargs: Any) -> dict[str, Any]:
         current_app.logger.debug(
-            f'{method.upper()} Request to Spotify API: {request_kwargs}')
+            f'{method.upper()} Request to Spotify API: {truncate_text(str(request_kwargs), 300)}')
         
         r = requests.request(method.upper(), **request_kwargs)
 
         current_app.logger.debug(
-            f'{r.status_code} Response from Spotify API: {truncate_text(r.text, 100)}')
+            f'{r.status_code} Response from Spotify API: {truncate_text(r.text, 300)}')
         
         if r.status_code not in SUCCESS_STATUSES:
             raise Exception(f"Error {r.status_code} received from Spotify API")
@@ -142,7 +142,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         return SpotifyUser.from_api_response(resp)
     
     # ignoring type here as I'm pretty sure there is a bug in mypy
-    def get_top_tracks_from_user(self, user: SpotifyUser, amount: int = 50) -> list[SpotifyTrack]: # type: ignore
+    def get_top_tracks_from_user(self, user: User, amount: int = 50) -> list[SpotifyTrack]:
         # could move validation logic to _make_request
         offset = 0
         max_limit = 50
@@ -151,11 +151,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
 
         tracks: list[SpotifyTrack] = []
         while remaining > 0:
-            current_app.logger.debug(f"'remaining', {remaining}, 'max_limit', {max_limit}")
-            if remaining < max_limit:
-                limit = remaining
-            else:
-                limit = max_limit
+            limit = remaining if remaining < max_limit else max_limit
 
             query_params = {
                 'time_range': time_range, #TODO: make this customizable
@@ -168,6 +164,10 @@ class SpotifyClient(Client, LoadFromEnvMixin):
                                       params=query_params,
                                       headers={'Authorization': f'Bearer {user.token}'})
             
+            # TODO: Make it so that we use all of the ones for last mont first
+            # And then fill in the rest with 6 months. Could do the following logic:
+            # Simply check if the list if empty (it'll get to that point lol)
+            # and then retry using the following term 'medium_term'
             if resp['total'] < amount:
                 current_app.logger.info(
                     f"User {user.email}'s top tracks from last month arent enough."
@@ -183,7 +183,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
     
     def create_playlist(self,
                         *,
-                        user: SpotifyUser,
+                        user: User,
                         name: str,
                         public: bool,
                         collaborative: bool,
@@ -204,16 +204,32 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         
         return SpotifyPlaylist.from_api_response(resp)
 
-    def update_playlist_tracks(self, user: SpotifyUser, playlist: SpotifyPlaylist, tracks: list[SpotifyTrack]) -> str:
-        resp = self._make_request(
+    def update_playlist_tracks(self, user: User, playlist: Playlist, tracks: Sequence[Track]) -> Playlist:
+        url = f'{self.SPOTIFY_API_URL}/playlists/{playlist.id}/tracks'
+        max_limit = 100
+        track_uris = [t.uri for t in tracks]
+        uris_replace = track_uris[:max_limit]
+        uris_add = track_uris[max_limit:]
+
+        self._make_request(
             'put',
             ['snapshot_id'],
-            url=f'{self.SPOTIFY_API_URL}/playlists/{playlist.id}/tracks',
-            json={'uris': [t.uri for t in tracks]},
+            url=url,
+            json={'uris': uris_replace},
             headers={'Authorization': f'Bearer {user.token}'}
         )
-        
-        snapshot_id: str = resp['snapshot_id']
-        return snapshot_id
+
+        while uris_add:
+            uris_to_send = uris_add[:max_limit]
+            uris_add = uris_add[max_limit:]
+
+            self._make_request('post',
+                               ['snapshot_id'],
+                               url=url,
+                               json={'uris': uris_to_send},
+                               headers={'Authorization': f'Bearer {user.token}'})
+            
+        playlist.tracks = tracks
+        return playlist
     
 SpotifyUser._client_cls = SpotifyClient
