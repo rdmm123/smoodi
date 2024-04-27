@@ -44,3 +44,6 @@ def is_email_valid(email: str) -> bool:
         return False
     
     return True
+
+def truncate_text(text: str, max_length: int) -> str:
+    return (text[:max_length] + '... (truncated)') if len(text) > max_length else text

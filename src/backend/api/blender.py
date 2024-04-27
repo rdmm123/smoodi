@@ -44,11 +44,10 @@ def blend() -> ResponseReturnValue:
             user.load_auth_data_from_response(new_auth_data)
             user_repository.save_user(user)
 
-
-    blender = Blender(client, users)
-
     if 'playlist_length' in body and body['playlist_length']:
-        blender.playlist_length = body['playlist_length']
+        blender = Blender(client, users, body['playlist_length'])
+    else:
+        blender = Blender(client, users)
 
     tracks = blender.blend()
     playlist = SpotifyPlaylist(tracks=tracks)

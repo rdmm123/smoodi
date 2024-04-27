@@ -6,7 +6,7 @@ from typing import Any, Iterable
 from flask import current_app
 from collections.abc import Collection
 
-from core.helpers import get_missing_keys, LoadFromEnvMixin
+from core.helpers import get_missing_keys, LoadFromEnvMixin, truncate_text
 from core.client.base import Client, SUCCESS_STATUSES
 from core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPlaylist
 
@@ -42,7 +42,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         r = requests.request(method.upper(), **request_kwargs)
 
         current_app.logger.debug(
-            f'{r.status_code} Response from Spotify API: {r.text}')
+            f'{r.status_code} Response from Spotify API: {truncate_text(r.text, 100)}')
         
         if r.status_code not in SUCCESS_STATUSES:
             raise Exception(f"Error {r.status_code} received from Spotify API")
@@ -151,6 +151,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
 
         tracks: list[SpotifyTrack] = []
         while remaining > 0:
+            current_app.logger.debug(f"'remaining', {remaining}, 'max_limit', {max_limit}")
             if remaining < max_limit:
                 limit = remaining
             else:

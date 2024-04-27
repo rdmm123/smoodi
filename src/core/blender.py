@@ -98,6 +98,13 @@ class Blender:
             remaining_users.add(user)
 
         return remaining_users
+    
+    def _track_in_playlist(self, track: Track) -> bool:
+        for p_track in self.playlist:
+            if p_track.uri == track.uri:
+                return True
+        
+        return False
 
     def blend(self) -> list[Track]:
         if len(self.playlist) == self.playlist_length:
@@ -114,11 +121,11 @@ class Blender:
             user_stack_handler = self._stacks_per_user[current_user]
             stack_top = user_stack_handler.stack.popleft()
 
-            if stack_top in self.playlist:
+            if self._track_in_playlist(stack_top):
                 stack_top = user_stack_handler.pop_left_and_pull_from_pool()
 
-            elif stack_top.name in current_tops:
-                existing_track = current_tops[stack_top.name]
+            elif stack_top.uri in current_tops:
+                existing_track = current_tops[stack_top.uri]
                 # to make mypy stop crying
                 assert existing_track.user is not None
 
@@ -140,7 +147,7 @@ class Blender:
                     else:
                         user_stack_handler.pop_left_and_pull_from_pool()
 
-            current_tops[stack_top.name] = stack_top
+            current_tops[stack_top.uri] = stack_top
 
         self.playlist += [track for track in current_tops.values()]
 

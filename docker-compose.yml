@@ -6,8 +6,10 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      target: debugpy
     ports:
       - 5000:5000
+      - 5679:5679
     env_file:
       - .env
     volumes:
