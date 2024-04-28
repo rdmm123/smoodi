@@ -121,6 +121,9 @@ class Blender:
             user_stack_handler = self._stacks_per_user[current_user]
             stack_top = user_stack_handler.stack.popleft()
 
+            # if stack_top.uri == 'spotify:track:1YnChEM51BVZ5dRhbVFEMl':
+            #     pass
+
             if self._track_in_playlist(stack_top):
                 stack_top = user_stack_handler.pop_left_and_pull_from_pool()
 

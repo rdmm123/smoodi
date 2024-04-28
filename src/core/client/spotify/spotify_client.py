@@ -9,6 +9,7 @@ from collections.abc import Sequence
 from core.helpers import get_missing_keys, LoadFromEnvMixin, truncate_text
 from core.client.base import Client, SUCCESS_STATUSES, Track, User, Playlist
 from core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPlaylist
+from core.storage.base import Storage
 
 # TODO: use cache to save requests made
 class SpotifyClient(Client, LoadFromEnvMixin):
@@ -32,16 +33,28 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         'client_id': 'SPOTIFY_CLIENT_ID'
     }
 
+    CACHE_KEY_PREFIX = 'spotify_api_request:'
+
+    def __init__(self, storage: Storage) -> None:
+        self._storage = storage
+        super().__init__()
+
     def _make_request(self,
                       method: str,
                       keys_to_check: Iterable[str] = [],
                       **request_kwargs: Any) -> dict[str, Any]:
-        current_app.logger.debug(
+        current_app.logger.info(
             f'{method.upper()} Request to Spotify API: {truncate_text(str(request_kwargs), 300)}')
         
+        cached_response = self._get_response_from_cache(method=method, **request_kwargs)
+        if cached_response:
+            current_app.logger.info(
+                f'{method.upper()} Response retrieved from cache: {truncate_text(str(request_kwargs), 300)}')
+            return cached_response
+
         r = requests.request(method.upper(), **request_kwargs)
 
-        current_app.logger.debug(
+        current_app.logger.info(
             f'{r.status_code} Response from Spotify API: {truncate_text(r.text, 300)}')
         
         if r.status_code not in SUCCESS_STATUSES:
@@ -54,6 +67,14 @@ class SpotifyClient(Client, LoadFromEnvMixin):
             raise Exception(f"{', '.join(missing_keys)} not found in response.")
         
         return resp
+    
+    def _get_response_from_cache(self, **request_kwargs: Any) -> dict[str, Any] | None:
+        key = self._get_cache_key_for_request(request_kwargs)
+        return self._storage.read(key)
+    
+    def _get_cache_key_for_request(self, request_kwargs: dict[str, Any]) -> str:
+        cache_key_list = [f'{k}:{v}' for k, v in request_kwargs.items()]
+        return self.CACHE_KEY_PREFIX + ':'.join(cache_key_list)
 
     def generate_auth_url(self, redirect_url: str, state: str | None = None) -> str:
         query_params = {
@@ -143,7 +164,7 @@ class SpotifyClient(Client, LoadFromEnvMixin):
     
     # ignoring type here as I'm pretty sure there is a bug in mypy
     def get_top_tracks_from_user(self, user: User, amount: int = 50) -> list[SpotifyTrack]:
-        # could move validation logic to _make_request
+        # could move pagination logic to _make_request
         offset = 0
         max_limit = 50
         remaining = amount

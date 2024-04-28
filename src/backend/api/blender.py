@@ -62,7 +62,6 @@ def blend() -> ResponseReturnValue:
             description=playlist_name
         )
         client.update_playlist_tracks(user, playlist, tracks)
-        playlist.tracks = tracks
 
     return {
         'playlist': playlist
