@@ -11,6 +11,17 @@ export interface Track {
     album: string
     cover_art: string
     preview: string
+    user: User
+}
+
+export interface TrackResponse {
+    name: string
+    external_url: string
+    uri: string
+    artists: Artist[]
+    album: string
+    cover_art: string
+    preview: string
     user: string | null
 }
 
@@ -28,8 +39,8 @@ export interface UserSessionResponse {
     session: User[]
 }
 
-export interface Playlist {
-    tracks: Track[]
+export interface PlaylistResponse {
+    tracks: TrackResponse[]
     id?: string
     href?: string
     uri?: string
@@ -42,5 +53,18 @@ export interface Playlist {
 }
 
 export interface BlendResponse {
-    playlist: Playlist
+    playlist: PlaylistResponse
+}
+
+export interface Playlist {
+    tracks: Track[]
+    id?: string
+    href?: string
+    uri?: string
+    external_url?: string
+    name?: string
+    description?: string
+    owner?: string
+    public?: boolean
+    collaborative?: boolean
 }

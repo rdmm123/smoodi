@@ -11,12 +11,10 @@ import PlaylistForm from "components/PlaylistForm";
 export default function BlendifyPage() {
   const { user, session } = useUserContext();
 
-  if (!user) {
-    return
-  }
+  if (!user) { return }
 
-  const blendUserIds = session.map((sessionUser) => sessionUser.id);
-  blendUserIds.push(user.id)
+  const blendUsers = [...session];
+  blendUsers.push(user);
 
   const initialPlaylist: PlaylistType = {tracks: []}
   const [playlist, setPlaylist] = useState(initialPlaylist);
@@ -26,14 +24,14 @@ export default function BlendifyPage() {
   const [blendLoading, setBlendLoading] = useState(false);
   
   const handleFormSubmit = async ({ formData }) => {
-    const previewPlaylist = await createBlend(blendUserIds, parseInt(formData.playlistLength));
+    const previewPlaylist = await createBlend(blendUsers, parseInt(formData.playlistLength));
     setPlaylist(previewPlaylist);
   }
 
   const handlePlaylistConfirm = async(e: MouseEvent) => {    
     e.preventDefault();
 
-    const createdPlaylist = await createBlend(blendUserIds, playlist.tracks.length, true);
+    const createdPlaylist = await createBlend(blendUsers, playlist.tracks.length, true);
     if (createdPlaylist.id) {
       setPlaylist(createdPlaylist);
     }
@@ -50,7 +48,7 @@ export default function BlendifyPage() {
       {
         isPlaylistCreated &&
         <div>
-          Playlist Created, <a href={playlist.external_url}>link</a>
+          Playlist Created, <a className="underline text-green-500" href={playlist.external_url}>link</a>
         </div>
       }
   </>

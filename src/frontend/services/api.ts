@@ -1,4 +1,4 @@
-import { BlendResponse, User, UserResponse, UserSessionResponse } from "./api.types";
+import { BlendResponse, User, UserResponse, UserSessionResponse, Playlist, Track } from "./api.types";
 
 const API_URL = BACKEND_HOST + '/api';
 
@@ -26,14 +26,14 @@ export const fetchUserSession = async ({ id }: User) => {
     return userSessionResponse.session;
 }
 
-export const createBlend = async (userIds: string[], playlistLength: number, create: boolean = false) => {
+export const createBlend = async (users: User[], playlistLength: number, create: boolean = false) => {
     const response = await fetch(`${API_URL}/blender/blend`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
           },
         body: JSON.stringify({
-            users: userIds,
+            users: users.map(user => user.id),
             playlist_length: playlistLength,
             create: create
         })
@@ -44,5 +44,12 @@ export const createBlend = async (userIds: string[], playlistLength: number, cre
     }
 
     const blendResponse: BlendResponse = await response.json()
-    return blendResponse.playlist;
+    const playlist: Playlist = { ...blendResponse.playlist, tracks: [] };
+    
+    playlist.tracks = blendResponse.playlist.tracks.map(track => ({
+        ...track,
+        user: users.filter(user => user.id === track.user)[0]
+    }))
+
+    return playlist;
 }

@@ -54,6 +54,5 @@ export function UserContextProvider({ children } : { children: React.ReactNode }
 
 export function useUserContext() {
   const context = useContext(UserContext);
-
   return context
 }
