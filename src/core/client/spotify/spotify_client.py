@@ -1,8 +1,9 @@
 import datetime as dt
 import requests
 import base64
+import json
 from urllib.parse import urlencode
-from typing import Any, Iterable
+from typing import Any, Iterable, Type
 from flask import current_app
 from collections.abc import Sequence
 
@@ -10,9 +11,10 @@ from core.helpers import get_missing_keys, LoadFromEnvMixin, truncate_text
 from core.client.base import Client, SUCCESS_STATUSES, Track, User, Playlist
 from core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPlaylist
 from core.storage.base import Storage
+from core.storage.cache_storage import CacheStorage
 
 # TODO: use cache to save requests made
-class SpotifyClient(Client, LoadFromEnvMixin):
+class SpotifyClient(LoadFromEnvMixin, Client):
     SPOTIFY_AUTH_URL = 'https://accounts.spotify.com'
     SPOTIFY_API_URL = 'https://api.spotify.com/v1'
 
@@ -34,9 +36,12 @@ class SpotifyClient(Client, LoadFromEnvMixin):
     }
 
     CACHE_KEY_PREFIX = 'spotify_api_request:'
+    CACHE_EXPIRY = 3540 # tokens expire in an hour, so should all data
 
-    def __init__(self, storage: Storage) -> None:
-        self._storage = storage
+    _storage_cls: Type[Storage]
+
+    def __init__(self) -> None:
+        self._storage = self._storage_cls()
         super().__init__()
 
     def _make_request(self,
@@ -46,11 +51,12 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         current_app.logger.info(
             f'{method.upper()} Request to Spotify API: {truncate_text(str(request_kwargs), 300)}')
         
-        cached_response = self._get_response_from_cache(method=method, **request_kwargs)
-        if cached_response:
-            current_app.logger.info(
-                f'{method.upper()} Response retrieved from cache: {truncate_text(str(request_kwargs), 300)}')
-            return cached_response
+        if method.lower() == 'get':
+            cached_response = self._get_response_from_cache(method=method, **request_kwargs)
+            if cached_response:
+                current_app.logger.info(
+                    f'{method.upper()} Response retrieved from cache: {truncate_text(str(cached_response), 300)}')
+                return cached_response
 
         r = requests.request(method.upper(), **request_kwargs)
 
@@ -61,6 +67,9 @@ class SpotifyClient(Client, LoadFromEnvMixin):
             raise Exception(f"Error {r.status_code} received from Spotify API")
         
         resp: dict[str, Any] = r.json()
+        
+        if method.lower() == 'get':
+            self._save_response_to_cache(resp, method=method, **request_kwargs)
 
         missing_keys = get_missing_keys(resp, *keys_to_check)
         if missing_keys:
@@ -70,7 +79,19 @@ class SpotifyClient(Client, LoadFromEnvMixin):
     
     def _get_response_from_cache(self, **request_kwargs: Any) -> dict[str, Any] | None:
         key = self._get_cache_key_for_request(request_kwargs)
-        return self._storage.read(key)
+        response_raw: str | None = self._storage.read(key)
+
+        if response_raw:
+            response: dict[str, Any] = json.loads(response_raw)
+            return response
+        
+        return None
+    
+    def _save_response_to_cache(self, response: dict[str, Any], **request_kwargs: Any) -> None:
+        key = self._get_cache_key_for_request(request_kwargs)
+        self._storage.write(key,
+                            json.dumps(response),
+                            expiry_seconds=self.CACHE_EXPIRY)
     
     def _get_cache_key_for_request(self, request_kwargs: dict[str, Any]) -> str:
         cache_key_list = [f'{k}:{v}' for k, v in request_kwargs.items()]
@@ -253,4 +274,5 @@ class SpotifyClient(Client, LoadFromEnvMixin):
         playlist.tracks = tracks
         return playlist
     
+SpotifyClient._storage_cls = CacheStorage
 SpotifyUser._client_cls = SpotifyClient

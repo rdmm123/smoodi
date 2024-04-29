@@ -19,7 +19,9 @@ class CacheStorage(Storage, LoadFromEnvMixin):
         self.cache_client = redis.Redis(self.host, int(self.port))
 
     def write(self, to: str, value: Any, **params: Any) -> None:
-        self.cache_client.set(to, value)
+        expiry_seconds: int | None = params.get('expiry_seconds')
+
+        self.cache_client.set(to, value, ex=expiry_seconds)
     
     def read(self, source: str, **params: Any) -> Any:
         return self.cache_client.get(source)
