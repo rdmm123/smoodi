@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-      target: main
+      target: main # debugpy
     ports:
       - 5000:5000
       - 5678:5678

@@ -121,13 +121,12 @@ class Blender:
             user_stack_handler = self._stacks_per_user[current_user]
             stack_top = user_stack_handler.stack.popleft()
 
-            # if stack_top.uri == 'spotify:track:1YnChEM51BVZ5dRhbVFEMl':
-            #     pass
-
             if self._track_in_playlist(stack_top):
-                stack_top = user_stack_handler.pop_left_and_pull_from_pool()
+                user_stack_handler.pull_from_pool()
+                remaining_users.add(current_user)
+                continue
 
-            elif stack_top.uri in current_tops:
+            if stack_top.uri in current_tops:
                 existing_track = current_tops[stack_top.uri]
                 # to make mypy stop crying
                 assert existing_track.user is not None
@@ -135,9 +134,10 @@ class Blender:
                 owner = existing_track.user
                 owner_stack_handler = self._stacks_per_user[owner]
 
-                if owner_stack_handler.track_amount < user_stack_handler.track_amount:
-                    stack_top = user_stack_handler.pop_left_and_pull_from_pool()
-                elif owner_stack_handler.track_amount > user_stack_handler.track_amount:
+                if owner_stack_handler.track_amount > user_stack_handler.track_amount:
+                    user_stack_handler.pull_from_pool()
+                    remaining_users.add(current_user)
+                elif owner_stack_handler.track_amount < user_stack_handler.track_amount:
                     existing_track.user = current_user
                     owner_stack_handler.pull_from_pool()
                     remaining_users.add(owner)
@@ -148,7 +148,10 @@ class Blender:
                         owner_stack_handler
                         remaining_users.add(owner)
                     else:
-                        user_stack_handler.pop_left_and_pull_from_pool()
+                        user_stack_handler.pull_from_pool()
+                        remaining_users.add(current_user)
+
+                continue
 
             current_tops[stack_top.uri] = stack_top
 
