@@ -17,6 +17,10 @@ const userLoader = async () => {
   return null;
 }
 
+export interface ErrorLoader {
+  error: string
+}
+
 const routes: RouteObject[] = [
   {
     path: "/",
@@ -26,10 +30,10 @@ const routes: RouteObject[] = [
 
       const url = new URL(request.url);
       const error  = url.searchParams.get("error");
-      return { error };
+      return { error } as ErrorLoader;
     },
     
-    // errorElement: <ErrorPage />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",

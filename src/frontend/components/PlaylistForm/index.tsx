@@ -1,18 +1,24 @@
 import { FormEvent, useRef } from "react";
 import Button from "components/Button/Button";
 
+export interface OnSubmitArgs {
+  e: FormEvent,
+  formData: { playlistLength: string }
+}
+
 export default function PlaylistForm({ onSubmit }: { onSubmit?: Function }) {
   const lengthInputRef = useRef<HTMLInputElement>(null);
 
   const handleFormSubmit = (e: FormEvent) => {
     e.preventDefault();
 
-    const formData: { playlistLength: string } = {
+    const formData = {
       playlistLength: lengthInputRef.current?.value ?? '',
     }
 
     if (onSubmit) {
-      onSubmit({ e, formData })
+      const onSubmitArgs: OnSubmitArgs = { e, formData }
+      onSubmit(onSubmitArgs)
     }
   }
 

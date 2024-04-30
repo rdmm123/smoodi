@@ -1,4 +1,4 @@
-import { BlendResponse, User, UserResponse, UserSessionResponse, Playlist, Track } from "./api.types";
+import { BlendResponse, User, UserResponse, UserSessionResponse, Playlist } from "./api.types";
 
 const API_URL = BACKEND_HOST + '/api';
 

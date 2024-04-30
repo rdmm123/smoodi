@@ -1,12 +1,12 @@
 import { useUserContext } from "contexts/UserContext";
-import { useState, FormEvent, MouseEvent} from "react";
+import { useState,  MouseEvent} from "react";
 import { createBlend } from "services/api";
 
-import { Playlist as PlaylistType, Track } from "services/api.types";
+import { Playlist as PlaylistType } from "services/api.types";
 import Playlist from "components/Playlist";
 import CurrentSession from "components/CurrentSession";
 
-import PlaylistForm from "components/PlaylistForm";
+import PlaylistForm, { OnSubmitArgs } from "components/PlaylistForm";
 
 export default function BlendifyPage() {
   const { user, session } = useUserContext();
@@ -20,10 +20,10 @@ export default function BlendifyPage() {
   const [playlist, setPlaylist] = useState(initialPlaylist);
   const isPlaylistCreated = !!playlist.id;
 
-  const [previewLoading, setPreviewLoading] = useState(false);
-  const [blendLoading, setBlendLoading] = useState(false);
+  // const [previewLoading, setPreviewLoading] = useState(false);
+  // const [blendLoading, setBlendLoading] = useState(false);
   
-  const handleFormSubmit = async ({ formData }) => {
+  const handleFormSubmit = async ({ formData }: OnSubmitArgs) => {
     const previewPlaylist = await createBlend(blendUsers, parseInt(formData.playlistLength));
     setPlaylist(previewPlaylist);
   }

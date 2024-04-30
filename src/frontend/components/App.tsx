@@ -2,9 +2,10 @@ import { Outlet, useLoaderData } from "react-router-dom";
 
 import Header from "components/Header";
 import { UserContextProvider } from "contexts/UserContext";
+import { ErrorLoader } from "router";
 
 export default function App() {
-  const { error } = useLoaderData();
+  const { error } = useLoaderData() as ErrorLoader;
 
   return (
     <>
