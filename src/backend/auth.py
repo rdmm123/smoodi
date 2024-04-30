@@ -96,7 +96,7 @@ def callback() -> ResponseReturnValue:
 
         if user_id not in current_session:
             current_session.append(user_id)
-            storage.write(f'session:{session['main_user_id']}', json.dumps(current_session))
+            storage.write(f"session:{session['main_user_id']}", json.dumps(current_session))
 
         del session['main_user_id']
         return resp # TODO: change to redirect to login_result
