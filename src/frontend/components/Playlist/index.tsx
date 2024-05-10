@@ -23,7 +23,7 @@ export default function Playlist({ tracks, onConfirm }: PlaylistProps) {
     <ol className="list-decimal list-inside text-lg">
       {tracks.map((track) =>
         <li key={track.uri}>
-          <a href={track.external_url} className="font-bold underline">{track.name}</a> - {track.user.email}</li>)}
+          <a href={track.external_url} className="font-bold underline" target="_blank">{track.name}</a> - {track.user.email}</li>)}
     </ol>
     <hr className="my-5" />
     <div className="w-full text-end">
