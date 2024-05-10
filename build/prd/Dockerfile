@@ -6,7 +6,7 @@ COPY ./*.ts /app
 COPY ./*.js /app
 
 COPY ./src/frontend /app/src/frontend
-COPY .env /app
+COPY ./build.prd/.env_fe /app/.env
 
 COPY package.json .
 

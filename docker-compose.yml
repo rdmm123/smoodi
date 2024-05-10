@@ -6,13 +6,23 @@ services:
     image: blendify
     build:
       context: .
-      dockerfile: ./build/server/Dockerfile
+      dockerfile: ./build/dev/server/Dockerfile
       target: main # debugpy
     ports:
       - 5000:5000
       - 5678:5678
-    env_file:
-      - .env
+    environment:
+      - SPOTIFY_CLIENT_SECRET=update_me
+      - SPOTIFY_CLIENT_ID=update_me
+      - CACHE_HOST=blendify-cache
+      - CACHE_PORT=6379
+      - CACHE_USER=user
+      - CACHE_PASS=pass
+      - APP_HOST=127.0.0.1
+      - FLASK_SECRET_KEY=50ca850dc563343d820186c26a220a48dd8cc0dc252f8cec7e60057f496c7e72
+      - FLASK_SERVER_NAME=127.0.0.1:5000
+      - FLASK_FRONTEND_SERVER_NAME=127.0.0.1:5001
+      - FLASK_ENV=development
     volumes:
       - ./src:/app/src
   frontend:
@@ -20,7 +30,7 @@ services:
     image: blendify-fe
     build:
       context: .
-      dockerfile: ./build/frontend/Dockerfile
+      dockerfile: ./build/dev/frontend/Dockerfile
     ports:
       - 5001:5001
     volumes:
@@ -30,6 +40,6 @@ services:
     image: blendify-cache
     build: 
       context: .
-      dockerfile: ./build/redis/Dockerfile
+      dockerfile: ./build/dev/redis/Dockerfile
     ports:
       - 6379:6379
