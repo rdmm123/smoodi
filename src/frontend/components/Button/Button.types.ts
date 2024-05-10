@@ -26,5 +26,5 @@ export interface LinkButtonProps extends BaseButtonProps {
 
 export interface AnchorButtonProps extends BaseButtonProps {
     href: string
-    target: 'blank' | 'self' | 'parent' | 'top' | undefined
+    target?: 'blank' | 'self' | 'parent' | 'top'
 }

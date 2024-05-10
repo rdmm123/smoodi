@@ -30,4 +30,4 @@ RUN python -m pip install gunicorn
 COPY --from=build-fe /app/src/frontend/dist /app/src/frontend/dist
 
 ENV FLASK_ENV=production
-CMD exec gunicorn --bind :2107 --chdir=src/ --workers=1 --threads=8 --timeout=0 --access-logfile=- 'src.app:create_app()'
+CMD exec gunicorn --bind :2107 --workers=1 --threads=8 --timeout=0 --access-logfile=- 'src.backend:create_app()'
