@@ -25,5 +25,8 @@ def create_app() -> Flask:
         CORS(app, supports_credentials=True, resources={
             r'/api/*': {'origins': f"http://{app.config['FRONTEND_SERVER_NAME']}"}
         })
-    
+    else:
+        # TODO: set up logs when using gunicorn:
+        # https://trstringer.com/logging-flask-gunicorn-the-manageable-way/
+        pass
     return app
