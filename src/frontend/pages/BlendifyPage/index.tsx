@@ -48,7 +48,7 @@ export default function BlendifyPage() {
       {
         isPlaylistCreated &&
         <div>
-          Playlist Created, <a className="underline text-green-500" href={playlist.external_url}>link</a>
+          Playlist Created, <a className="underline text-green-500" href={playlist.external_url} target="_blank">link</a>
         </div>
       }
   </>

@@ -34,6 +34,7 @@ from collections.abc import Collection
 from collections import deque
 
 from src.core.client.base import User, Client, Track
+from flask import current_app
 
 DEFAULT_PLAYLIST_LENGTH = 100
 
@@ -62,7 +63,11 @@ class Blender:
         self.playlist: list[Track] = []
         self._songs_per_user: int = 0
         
-        self.users = {u.email: u for u in users}
+        self.users = {}
+        for u in users:
+            assert u.id is not None
+            self.users[u.id] = u
+
         self.client = client
         self.playlist_length = playlist_length
 
