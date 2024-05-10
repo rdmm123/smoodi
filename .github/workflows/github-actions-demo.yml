@@ -45,6 +45,7 @@ jobs:
         with:
           service: 'hello-world'
           region: 'us-central1'
+          image: us-central1-docker.pkg.dev/rdmm1234-project/blendify-repository/hello-world:latest
 
 
       - name: 'Use output'
