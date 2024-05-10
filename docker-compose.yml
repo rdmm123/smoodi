@@ -2,10 +2,11 @@ version: '3.4'
 
 services:
   blendify:
+    container_name: blendify
     image: blendify
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./build/server/Dockerfile
       target: main # debugpy
     ports:
       - 5000:5000
@@ -15,15 +16,20 @@ services:
     volumes:
       - ./src:/app/src
   frontend:
+    container_name: blendify-fe
     image: blendify-fe
     build:
       context: .
-      dockerfile: ./Dockerfile.fe
+      dockerfile: ./build/frontend/Dockerfile
     ports:
       - 5001:5001
     volumes:
       - ./src/frontend:/app/src/frontend
-  cache:
-    image: redis:latest
+  blendify-cache:
+    container_name: blendify-cache
+    image: blendify-cache
+    build: 
+      context: .
+      dockerfile: ./build/redis/Dockerfile
     ports:
       - 6379:6379
