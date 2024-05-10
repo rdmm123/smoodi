@@ -6,8 +6,8 @@ from src.core.storage.cache_storage import CacheStorage
 from src.core.repositories.user_repository import UserRepository
 
 storage = CacheStorage()
-client = SpotifyClient()
-user_repository = UserRepository(user_cls=SpotifyUser)
+client = SpotifyClient(storage=storage)
+user_repository = UserRepository(user_cls=SpotifyUser, storage=storage)
 
 def create_app() -> Flask:
     app = Flask(__name__)

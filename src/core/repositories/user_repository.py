@@ -15,10 +15,8 @@ class InvalidJsonException(Exception):
     pass
 
 class UserRepository(Generic[UserClassT]):
-    _storage_cls: Type[Storage]
-
-    def __init__(self, user_cls: Type[UserClassT]) -> None:
-        self._storage = self._storage_cls()
+    def __init__(self, user_cls: Type[UserClassT], storage: Storage) -> None:
+        self._storage = storage
         self._user_cls = user_cls
 
     def _get_user_object(self, raw_user: str) -> UserClassT:
@@ -92,6 +90,3 @@ class UserRepository(Generic[UserClassT]):
         self._storage.delete(f"user:{user_id}")
         self._storage.delete(f"user:email:{user.email}")
         self._storage.delete(f"session:{user_id}")
-
-
-UserRepository._storage_cls = CacheStorage

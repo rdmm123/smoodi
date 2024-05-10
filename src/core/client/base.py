@@ -37,17 +37,6 @@ class User(APIModel):
     refresh_token: str = ''
     token_expires: str = ''
     top_tracks: Sequence[Track] = field(default_factory=list)
-
-    _client_cls: ClassVar[Type[Client]]
-
-    def __post_init__(self) -> None:
-        self._client = self._client_cls()
-
-    def get_top_tracks(self, amount: int = 50) -> Sequence[Track]:
-        self.top_tracks = self._client.get_top_tracks_from_user(self, amount)
-        for track in self.top_tracks:
-            track.user = self.id
-        return self.top_tracks
     
 @dataclass
 class Playlist(APIModel):

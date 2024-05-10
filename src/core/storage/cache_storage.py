@@ -19,7 +19,6 @@ class CacheStorage(Storage, LoadFromEnvMixin):
 
     def __init__(self) -> None:
         self._load_attrs_from_env()
-        print(f'redis credentials {self.username} {self.password}')
         self.cache_client = redis.Redis(
             self.host,
             int(self.port),

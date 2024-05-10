@@ -38,10 +38,8 @@ class SpotifyClient(LoadFromEnvMixin, Client):
     CACHE_KEY_PREFIX = 'spotify_api_request:'
     CACHE_EXPIRY = 3540 # tokens expire in an hour, so should all data
 
-    _storage_cls: Type[Storage]
-
-    def __init__(self) -> None:
-        self._storage = self._storage_cls()
+    def __init__(self, storage: Storage) -> None:
+        self._storage = storage
         super().__init__()
 
     def _make_request(self,
@@ -216,8 +214,12 @@ class SpotifyClient(LoadFromEnvMixin, Client):
                     f"Amount requested: {amount}, total: {resp['total']}.")
                 time_range = 'medium_term'
                 continue
-                
-            tracks += [SpotifyTrack.from_api_response(track) for track in resp["items"]]
+            
+            for track in resp["items"]:
+                track_obj = SpotifyTrack.from_api_response(track)
+                track_obj.user = user.id
+                tracks.append(track_obj)
+            
             offset += limit
             remaining -= limit
         
@@ -273,6 +275,3 @@ class SpotifyClient(LoadFromEnvMixin, Client):
             
         playlist.tracks = tracks
         return playlist
-    
-SpotifyClient._storage_cls = CacheStorage
-SpotifyUser._client_cls = SpotifyClient

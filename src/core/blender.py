@@ -79,7 +79,7 @@ class Blender:
             if i < extra_song_count:
                 songs += 1
 
-            all_tracks = user_obj.get_top_tracks(songs * 2)
+            all_tracks = self.client.get_top_tracks_from_user(user_obj, songs * 2)
 
             self._stacks_per_user[user] = StackHandler(
                 all_tracks[:songs], all_tracks[songs:]
