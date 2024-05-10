@@ -33,7 +33,7 @@ import random
 from collections.abc import Collection
 from collections import deque
 
-from core.client.base import User, Client, Track
+from src.core.client.base import User, Client, Track
 
 DEFAULT_PLAYLIST_LENGTH = 100
 

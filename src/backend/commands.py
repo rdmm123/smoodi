@@ -6,16 +6,10 @@ import datetime as dt
 from flask import url_for, Blueprint
 from dataclasses import asdict
 
-from core.storage.cache_storage import CacheStorage
-from core.client.spotify.models import SpotifyUser
-from core.client.spotify.spotify_client import SpotifyClient
-from core.repositories.user_repository import UserRepository
-from core.helpers import is_email_valid
-from core.blender import Blender
-
-client = SpotifyClient()
-storage = CacheStorage()
-user_repository = UserRepository(SpotifyUser)
+from src.backend import user_repository, client
+from src.core.client.spotify.models import SpotifyUser
+from src.core.helpers import is_email_valid
+from src.core.blender import Blender
 
 bp = Blueprint('commands', __name__)
 @bp.cli.command('test-app-flow')

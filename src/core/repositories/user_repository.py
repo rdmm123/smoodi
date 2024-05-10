@@ -3,10 +3,10 @@ from typing import Type, TypeVar, Generic
 from flask import current_app
 from collections.abc import Collection
 
-from core.storage.cache_storage import CacheStorage
-from core.storage.base import Storage
+from src.core.storage.cache_storage import CacheStorage
+from src.core.storage.base import Storage
 
-from core.client.base import User
+from src.core.client.base import User
 from dataclasses import asdict
 
 UserClassT = TypeVar("UserClassT", bound=User)

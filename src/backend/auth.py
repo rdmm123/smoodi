@@ -5,18 +5,11 @@ import datetime as dt
 from flask import Blueprint, redirect, session, request, url_for, make_response, current_app
 from flask.typing import ResponseReturnValue
 from urllib.parse import urlencode
-from dataclasses import asdict
+from src.backend import storage, client, user_repository
 
-from core.client.spotify.spotify_client import SpotifyClient
-from core.client.spotify.models import SpotifyUser
-from core.helpers import get_random_string, get_absolute_url_for
-from core.storage.cache_storage import CacheStorage
-from core.repositories.user_repository import UserRepository
+from src.core.helpers import get_random_string, get_absolute_url_for
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-client = SpotifyClient()
-storage = CacheStorage()
-user_repository = UserRepository(user_cls=SpotifyUser)
 
 @bp.route("/login", defaults={'main_user_id': None})
 @bp.route("/login/<main_user_id>")

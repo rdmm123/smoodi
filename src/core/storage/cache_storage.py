@@ -1,22 +1,31 @@
 import redis
 from typing import Any, Collection
-from flask import session
 
-from core.storage.base import Storage
-from core.helpers import LoadFromEnvMixin
+from src.core.storage.base import Storage
+from src.core.helpers import LoadFromEnvMixin
 
 class CacheStorage(Storage, LoadFromEnvMixin):
     host: str = ''
     port: str = ''
+    username: str = ''
+    password: str = ''
 
     load_from_env: dict[str, str] = {
         'host': 'CACHE_HOST',
-        'port': 'CACHE_PORT'
+        'port': 'CACHE_PORT',
+        'username': 'CACHE_USER',
+        'password': 'CACHE_PASS'
     }
 
     def __init__(self) -> None:
         self._load_attrs_from_env()
-        self.cache_client = redis.Redis(self.host, int(self.port))
+        print(f'redis credentials {self.username} {self.password}')
+        self.cache_client = redis.Redis(
+            self.host,
+            int(self.port),
+            username=self.username,
+            password=self.password
+        )
 
     def write(self, to: str, value: Any, **params: Any) -> None:
         expiry_seconds: int | None = params.get('expiry_seconds')

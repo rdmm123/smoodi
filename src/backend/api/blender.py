@@ -2,17 +2,11 @@ import datetime as dt
 from flask import Blueprint, request
 from flask.typing import ResponseReturnValue
 
-from core.client.spotify.spotify_client import SpotifyClient
-from core.client.spotify.models import SpotifyUser, SpotifyPlaylist, SpotifyTrack
-from core.storage.cache_storage import CacheStorage
-from core.repositories.user_repository import UserRepository
-from core.blender import Blender
+from src.backend import client, user_repository
+from src.core.client.spotify.models import SpotifyPlaylist
+from src.core.blender import Blender
 
 KEYS_TO_EXLUDE_FROM_USER = ('token', 'refresh_token', 'token_expires', 'top_tracks')
-
-client = SpotifyClient()
-storage = CacheStorage()
-user_repository = UserRepository(user_cls=SpotifyUser)
 
 bp = Blueprint('blender', __name__, url_prefix='/blender')
 

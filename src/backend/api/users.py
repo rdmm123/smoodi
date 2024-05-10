@@ -3,16 +3,10 @@ from flask import Blueprint, session
 from flask.typing import ResponseReturnValue
 from dataclasses import asdict
 
-from core.client.spotify.spotify_client import SpotifyClient
-from core.client.spotify.models import SpotifyUser
-from core.storage.cache_storage import CacheStorage
-from core.repositories.user_repository import UserRepository, InvalidJsonException
+from src.backend import user_repository, client
+from src.core.repositories.user_repository import InvalidJsonException
 
 KEYS_TO_EXCLUDE_FROM_USER = ('token', 'refresh_token', 'token_expires', 'top_tracks')
-
-client = SpotifyClient()
-storage = CacheStorage()
-user_repository = UserRepository(user_cls=SpotifyUser)
 
 bp = Blueprint('users', __name__, url_prefix='/users')
 

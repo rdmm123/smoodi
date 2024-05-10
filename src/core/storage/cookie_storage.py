@@ -1,7 +1,7 @@
 from typing import Any, Collection
 from flask import request
 
-from core.storage.base import Storage
+from src.core.storage.base import Storage
 
 class CookieStorage(Storage):
     def write(self, to: str, value: Any, **params: Any) -> None:

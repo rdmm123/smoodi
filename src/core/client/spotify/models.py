@@ -2,7 +2,7 @@ import datetime as dt
 from dataclasses import dataclass
 from typing import Dict, Any, Self
 
-from core.client.base import User, Artist, Track, Playlist
+from src.core.client.base import User, Artist, Track, Playlist
 
 
 @dataclass

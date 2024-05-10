@@ -7,11 +7,11 @@ from typing import Any, Iterable, Type
 from flask import current_app
 from collections.abc import Sequence
 
-from core.helpers import get_missing_keys, LoadFromEnvMixin, truncate_text
-from core.client.base import Client, SUCCESS_STATUSES, Track, User, Playlist
-from core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPlaylist
-from core.storage.base import Storage
-from core.storage.cache_storage import CacheStorage
+from src.core.helpers import get_missing_keys, LoadFromEnvMixin, truncate_text
+from src.core.client.base import Client, SUCCESS_STATUSES, Track, User, Playlist
+from src.core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPlaylist
+from src.core.storage.base import Storage
+from src.core.storage.cache_storage import CacheStorage
 
 # TODO: use cache to save requests made
 class SpotifyClient(LoadFromEnvMixin, Client):
