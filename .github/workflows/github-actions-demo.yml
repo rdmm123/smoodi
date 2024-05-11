@@ -1,9 +1,6 @@
 name: apply on merge
   # Allows you to run this workflow on merge
-on:
-  push:
-    branches:
-      - github_actions
+on: [workflow_dispatch]
 env:
   REGION: us-central1
   
