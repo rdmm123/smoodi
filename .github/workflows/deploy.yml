@@ -1,10 +1,11 @@
+name: Build image, push to GAR and deploy to GCP
 on:
   push:
     branches: 
-      - github_actions
+      - main
 env:
   IMAGE_TAG: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REPO }}/${{ vars.SERVICE_NAME }}:${{ github.sha }}
-  
+
 jobs: 
   build-and-deploy:
     runs-on: ubuntu-latest
