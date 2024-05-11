@@ -10,7 +10,7 @@ function HomePage() {
       <LinkButton to="/session" color="green" light={false} className="text-3xl mt-5">Get Started</LinkButton>
     </>
   : <>
-      <h1 className="text-7xl">Log in to get started.</h1>
+      <h1 className="text-7xl">Log in to get started. test pipeline</h1>
     </>
 }
 
