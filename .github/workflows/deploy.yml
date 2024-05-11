@@ -2,7 +2,9 @@ on:
   push:
     branches: 
       - github_actions
-
+env:
+  IMAGE_TAG: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REPO }}/${{ vars.SERVICE_NAME }}:${{ github.sha }}
+  
 jobs: 
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -37,7 +39,7 @@ jobs:
           file: build/prd/Dockerfile
           push: true 
           tags: |
-            ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REPO }}/${{ vars.SERVICE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_TAG }}
 
       - name: Deploy to Cloud Run
         id: deploy
@@ -45,3 +47,4 @@ jobs:
         with:
           service: ${{ vars.SERVICE_NAME }}
           region: ${{ vars.GCP_REGION }}
+          image: ${{ env.IMAGE_TAG }}
