@@ -70,15 +70,15 @@ class Blender:
 
         self._set_stacks_per_user()
 
+        self._remaining_users: set[str] = set()
+
     def _set_stacks_per_user(self) -> None:
         songs_per_user, extra_song_count = divmod(self.playlist_length, len(self.users))
-        print(songs_per_user, extra_song_count)
         for i, user in enumerate(self.users):
             user_obj = self.users[user]
 
             songs = songs_per_user
             if i < extra_song_count:
-                print(user)
                 songs += 1
 
             all_tracks = self.client.get_top_tracks_from_user(user_obj, songs * 2)
@@ -86,21 +86,18 @@ class Blender:
             self._stacks_per_user[user] = StackHandler(
                 all_tracks[:songs], all_tracks[songs:]
             )
-            print(user, self._stacks_per_user[user].track_amount)
 
     def _all_stacks_empty(self) -> bool:
         return all(len(sh.stack) == 0 for sh in self._stacks_per_user.values())
     
     def _get_remaining_users(self) -> set[str]:
-        remaining_users: set[str] = set()
-
         for user in self._stacks_per_user:
             if len(self._stacks_per_user[user].stack) == 0:
                 continue
 
-            remaining_users.add(user)
+            self._remaining_users.add(user)
 
-        return remaining_users
+        return self._remaining_users
     
     def _track_in_playlist(self, track: Track) -> bool:
         for p_track in self.playlist:
@@ -110,7 +107,6 @@ class Blender:
         return False
 
     def blend(self) -> list[Track]:
-        print(len(self.playlist))
         if len(self.playlist) == self.playlist_length:
             return self.playlist
 
@@ -147,7 +143,6 @@ class Blender:
                     remaining_users.add(owner)
                 else:
                     new_owner = random.choice((owner, current_user))
-                    print('new_owner', new_owner)
                     if new_owner == current_user:
                         existing_track.user = current_user
                         owner_stack_handler.pull_from_pool()
