@@ -34,7 +34,6 @@ from collections.abc import Collection
 from collections import deque
 
 from src.core.client.base import User, Client, Track
-from flask import current_app
 
 DEFAULT_PLAYLIST_LENGTH = 100
 

@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Not Like Us",
+    "external_url": "https://test.api.com/track/not-like-us",
+    "uri": "uri:track:not-like-us",
+    "artists": [
+      {
+        "name": "Kendrick Lamar",
+        "url": "https://test.api.com/artist/kendrick-lamar"
+      }
+    ],
+    "album": "Not Like Us",
+    "cover_art": "https://test.api.com/track/not-like-us/cover",
+    "preview": "https://test.api.com/track/not-like-us/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "euphoria",
+    "external_url": "https://test.api.com/track/euphoria",
+    "uri": "uri:track:euphoria",
+    "artists": [
+      {
+        "name": "Kendrick Lamar",
+        "url": "https://test.api.com/artist/kendrick-lamar"
+      }
+    ],
+    "album": "euphoria",
+    "cover_art": "https://test.api.com/track/euphoria/cover",
+    "preview": "https://test.api.com/track/euphoria/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "Flow de Pueblo",
+    "external_url": "https://test.api.com/track/flow-de-pueblo",
+    "uri": "uri:track:flow-de-pueblo",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/flow-de-pueblo/cover",
+    "preview": "https://test.api.com/track/flow-de-pueblo/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "meet the grahams",
+    "external_url": "https://test.api.com/track/meet-the-grahams",
+    "uri": "uri:track:meet-the-grahams",
+    "artists": [
+      {
+        "name": "Kendrick Lamar",
+        "url": "https://test.api.com/artist/kendrick-lamar"
+      }
+    ],
+    "album": "meet the grahams",
+    "cover_art": "https://test.api.com/track/meet-the-grahams/cover",
+    "preview": "https://test.api.com/track/meet-the-grahams/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "El Censor",
+    "external_url": "https://test.api.com/track/el-censor",
+    "uri": "uri:track:el-censor",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/el-censor/cover",
+    "preview": "https://test.api.com/track/el-censor/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "De la Rosa Prada",
+    "external_url": "https://test.api.com/track/de-la-rosa-prada",
+    "uri": "uri:track:de-la-rosa-prada",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/de-la-rosa-prada/cover",
+    "preview": "https://test.api.com/track/de-la-rosa-prada/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "Dios Funciona",
+    "external_url": "https://test.api.com/track/dios-funciona",
+    "uri": "uri:track:dios-funciona",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/dios-funciona/cover",
+    "preview": "https://test.api.com/track/dios-funciona/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "La Balsa de la Medusa",
+    "external_url": "https://test.api.com/track/la-balsa-de-la-medusa",
+    "uri": "uri:track:la-balsa-de-la-medusa",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/la-balsa-de-la-medusa/cover",
+    "preview": "https://test.api.com/track/la-balsa-de-la-medusa/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "Family Matters",
+    "external_url": "https://test.api.com/track/family-matters",
+    "uri": "uri:track:family-matters",
+    "artists": [
+      {
+        "name": "Drake",
+        "url": "https://test.api.com/artist/drake"
+      }
+    ],
+    "album": "Family Matters",
+    "cover_art": "https://test.api.com/track/family-matters/cover",
+    "preview": "https://test.api.com/track/family-matters/preview",
+    "user": "no_conflicts_user_1"
+  },
+  {
+    "name": "KAWA",
+    "external_url": "https://test.api.com/track/kawa",
+    "uri": "uri:track:kawa",
+    "artists": [
+      {
+        "name": "Alvaro Diaz",
+        "url": "https://test.api.com/artist/alvaro-diaz"
+      }
+    ],
+    "album": "SAYONARA",
+    "cover_art": "https://test.api.com/track/kawa/cover",
+    "preview": "https://test.api.com/track/kawa/preview",
+    "user": "no_conflicts_user_1"
+  }
+]
