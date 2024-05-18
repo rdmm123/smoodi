@@ -1,3 +1,4 @@
+import logging
 from flask import Flask
 
 from src.core.client.spotify.spotify_client import SpotifyClient
@@ -26,7 +27,8 @@ def create_app() -> Flask:
             r'/api/*': {'origins': f"http://{app.config['FRONTEND_SERVER_NAME']}"}
         })
     else:
-        # TODO: set up logs when using gunicorn:
-        # https://trstringer.com/logging-flask-gunicorn-the-manageable-way/
-        pass
+        gunicorn_logger = logging.getLogger('gunicorn.error')
+        app.logger.handlers = gunicorn_logger.handlers
+        app.logger.setLevel(gunicorn_logger.level)
+
     return app
