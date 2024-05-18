@@ -181,7 +181,6 @@ class SpotifyClient(LoadFromEnvMixin, Client):
             headers={'Authorization': f'Bearer {user_identifier}'})
         return SpotifyUser.from_api_response(resp)
     
-    # ignoring type here as I'm pretty sure there is a bug in mypy
     def get_top_tracks_from_user(self, user: User, amount: int = 50) -> list[SpotifyTrack]:
         # could move pagination logic to _make_request
         offset = 0

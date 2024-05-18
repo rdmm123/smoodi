@@ -21,11 +21,10 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY . /app
 
-COPY requirements.txt .
+COPY ./build/prd/requirements.txt .
 
 RUN python -m pip install -U pip
 RUN python -m pip install -r requirements.txt
-RUN python -m pip install gunicorn
 
 COPY --from=build-fe /app/src/frontend/dist /app/src/frontend/dist
 

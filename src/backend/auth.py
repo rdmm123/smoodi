@@ -1,8 +1,7 @@
 import json
 import uuid
 
-import datetime as dt
-from flask import Blueprint, redirect, session, request, url_for, make_response, current_app
+from flask import Blueprint, redirect, session, request, url_for, make_response
 from flask.typing import ResponseReturnValue
 from urllib.parse import urlencode
 from src.backend import storage, client, user_repository
