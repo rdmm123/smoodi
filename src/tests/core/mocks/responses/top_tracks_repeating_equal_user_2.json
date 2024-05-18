@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Not Like Us",
+    "external_url": "https://test.api.com/track/not-like-us",
+    "uri": "uri:track:not-like-us",
+    "artists": [
+      {
+        "name": "Kendrick Lamar",
+        "url": "https://test.api.com/artist/kendrick-lamar"
+      }
+    ],
+    "album": "Not Like Us",
+    "cover_art": "https://test.api.com/track/not-like-us/cover",
+    "preview": "https://test.api.com/track/not-like-us/preview",
+    "user": null
+  },
+  {
+    "name": "VOYCONTODO",
+    "external_url": "https://test.api.com/track/voycontodo",
+    "uri": "uri:track:voycontodo",
+    "artists": [
+      {
+        "name": "Ralphie Choo",
+        "url": "https://test.api.com/artist/ralphie-choo"
+      }
+    ],
+    "album": "SUPERNOVA",
+    "cover_art": "https://test.api.com/track/voycontodo/cover",
+    "preview": "https://test.api.com/track/voycontodo/preview",
+    "user": null
+  },
+  {
+    "name": "El Sentido de la Vida",
+    "external_url": "https://test.api.com/track/el-sentido-de-la-vida",
+    "uri": "uri:track:el-sentido-de-la-vida",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/el-sentido-de-la-vida/cover",
+    "preview": "https://test.api.com/track/el-sentido-de-la-vida/preview",
+    "user": null
+  },
+  {
+    "name": "Sublime",
+    "external_url": "https://test.api.com/track/sublime",
+    "uri": "uri:track:sublime",
+    "artists": [
+      {
+        "name": "Sen Senra",
+        "url": "https://test.api.com/artist/sen-senra"
+      }
+    ],
+    "album": "Corazón Cromado",
+    "cover_art": "https://test.api.com/track/sublime/cover",
+    "preview": "https://test.api.com/track/sublime/preview",
+    "user": null
+  },
+  {
+    "name": "TE VI EN MIS PESADILLAS",
+    "external_url": "https://test.api.com/track/te-vi-en-mis-pesadillas",
+    "uri": "uri:track:te-vi-en-mis-pesadillas",
+    "artists": [
+      {
+        "name": "Alvaro Diaz",
+        "url": "https://test.api.com/artist/alvaro-diaz"
+      }
+    ],
+    "album": "SAYONARA",
+    "cover_art": "https://test.api.com/track/te-vi-en-mis-pesadillas/cover",
+    "preview": "https://test.api.com/track/te-vi-en-mis-pesadillas/preview",
+    "user": null
+  },
+  {
+    "name": "MAMI 100PRE SABE (INTERLUDE)",
+    "external_url": "https://test.api.com/track/mami-100pre-sabe-(interlude)",
+    "uri": "uri:track:mami-100pre-sabe-(interlude)",
+    "artists": [
+      {
+        "name": "Alvaro Diaz",
+        "url": "https://test.api.com/artist/alvaro-diaz"
+      }
+    ],
+    "album": "SAYONARA",
+    "cover_art": "https://test.api.com/track/mami-100pre-sabe-(interlude)/cover",
+    "preview": "https://test.api.com/track/mami-100pre-sabe-(interlude)/preview",
+    "user": null
+  },
+  {
+    "name": "El Rapto de Perséfone",
+    "external_url": "https://test.api.com/track/el-rapto-de-perséfone",
+    "uri": "uri:track:el-rapto-de-perséfone",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/el-rapto-de-perséfone/cover",
+    "preview": "https://test.api.com/track/el-rapto-de-perséfone/preview",
+    "user": null
+  },
+  {
+    "name": "Blue Jeans Y Un Crop Top",
+    "external_url": "https://test.api.com/track/blue-jeans-y-un-crop-top",
+    "uri": "uri:track:blue-jeans-y-un-crop-top",
+    "artists": [
+      {
+        "name": "Sen Senra",
+        "url": "https://test.api.com/artist/sen-senra"
+      }
+    ],
+    "album": "PO2054AZ (Vol.I)",
+    "cover_art": "https://test.api.com/track/blue-jeans-y-un-crop-top/cover",
+    "preview": "https://test.api.com/track/blue-jeans-y-un-crop-top/preview",
+    "user": null
+  },
+  {
+    "name": "SUPERNOVA",
+    "external_url": "https://test.api.com/track/supernova",
+    "uri": "uri:track:supernova",
+    "artists": [
+      {
+        "name": "Ralphie Choo",
+        "url": "https://test.api.com/artist/ralphie-choo"
+      }
+    ],
+    "album": "SUPERNOVA",
+    "cover_art": "https://test.api.com/track/supernova/cover",
+    "preview": "https://test.api.com/track/supernova/preview",
+    "user": null
+  },
+  {
+    "name": "Cristina",
+    "external_url": "https://test.api.com/track/cristina",
+    "uri": "uri:track:cristina",
+    "artists": [
+      {
+        "name": "Easykid",
+        "url": "https://test.api.com/artist/easykid"
+      }
+    ],
+    "album": "Sorry, Estoy en Mi Darkera",
+    "cover_art": "https://test.api.com/track/cristina/cover",
+    "preview": "https://test.api.com/track/cristina/preview",
+    "user": null
+  }
+]

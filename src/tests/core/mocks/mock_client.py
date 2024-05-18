@@ -16,7 +16,7 @@ class MockClient:
     def get_top_tracks_from_user(self, user: User, amount: int = 50) -> Sequence[Track]:
         assert user.id is not None
         responses_folder = Path('src/tests/core/mocks/responses')
-        response_file = responses_folder / f"{user.id}.json"
+        response_file = responses_folder / f"top_tracks_{user.api_id}_{user.id}.json"
 
         if not response_file.exists():
             raise ValueError(f'Response file not found {user.id}.json')
@@ -29,6 +29,7 @@ class MockClient:
             artists = [Artist(**a) for a in track_json['artists']]
             track_json['artists'] = artists
             track = Track(**track_json)
+            track.user = user.id
             tracks.append(track)
         
         return tracks

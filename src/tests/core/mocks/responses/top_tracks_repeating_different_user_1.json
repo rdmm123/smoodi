@@ -12,7 +12,7 @@
     "album": "Not Like Us",
     "cover_art": "https://test.api.com/track/not-like-us/cover",
     "preview": "https://test.api.com/track/not-like-us/preview",
-    "user": "no_conflicts_user_1"
+    "user": null
   },
   {
     "name": "euphoria",
@@ -27,22 +27,22 @@
     "album": "euphoria",
     "cover_art": "https://test.api.com/track/euphoria/cover",
     "preview": "https://test.api.com/track/euphoria/preview",
-    "user": "no_conflicts_user_1"
+    "user": null
   },
   {
-    "name": "Flow de Pueblo",
-    "external_url": "https://test.api.com/track/flow-de-pueblo",
-    "uri": "uri:track:flow-de-pueblo",
+    "name": "Sublime",
+    "external_url": "https://test.api.com/track/sublime",
+    "uri": "uri:track:sublime",
     "artists": [
       {
-        "name": "Nico Miseria",
-        "url": "https://test.api.com/artist/nico-miseria"
+        "name": "Sen Senra",
+        "url": "https://test.api.com/artist/sen-senra"
       }
     ],
-    "album": "El Periplo del Héroe",
-    "cover_art": "https://test.api.com/track/flow-de-pueblo/cover",
-    "preview": "https://test.api.com/track/flow-de-pueblo/preview",
-    "user": "no_conflicts_user_1"
+    "album": "Corazón Cromado",
+    "cover_art": "https://test.api.com/track/sublime/cover",
+    "preview": "https://test.api.com/track/sublime/preview",
+    "user": null
   },
   {
     "name": "meet the grahams",
@@ -57,7 +57,7 @@
     "album": "meet the grahams",
     "cover_art": "https://test.api.com/track/meet-the-grahams/cover",
     "preview": "https://test.api.com/track/meet-the-grahams/preview",
-    "user": "no_conflicts_user_1"
+    "user": null
   },
   {
     "name": "El Censor",
@@ -72,7 +72,7 @@
     "album": "El Periplo del Héroe",
     "cover_art": "https://test.api.com/track/el-censor/cover",
     "preview": "https://test.api.com/track/el-censor/preview",
-    "user": "no_conflicts_user_1"
+    "user": null
   },
   {
     "name": "De la Rosa Prada",
@@ -87,7 +87,7 @@
     "album": "El Periplo del Héroe",
     "cover_art": "https://test.api.com/track/de-la-rosa-prada/cover",
     "preview": "https://test.api.com/track/de-la-rosa-prada/preview",
-    "user": "no_conflicts_user_1"
+    "user": null
   },
   {
     "name": "Dios Funciona",
@@ -102,7 +102,7 @@
     "album": "El Periplo del Héroe",
     "cover_art": "https://test.api.com/track/dios-funciona/cover",
     "preview": "https://test.api.com/track/dios-funciona/preview",
-    "user": "no_conflicts_user_1"
+    "user": null
   },
   {
     "name": "La Balsa de la Medusa",
@@ -117,7 +117,7 @@
     "album": "El Periplo del Héroe",
     "cover_art": "https://test.api.com/track/la-balsa-de-la-medusa/cover",
     "preview": "https://test.api.com/track/la-balsa-de-la-medusa/preview",
-    "user": "no_conflicts_user_1"
+    "user": null
   },
   {
     "name": "Family Matters",
@@ -132,21 +132,21 @@
     "album": "Family Matters",
     "cover_art": "https://test.api.com/track/family-matters/cover",
     "preview": "https://test.api.com/track/family-matters/preview",
-    "user": "no_conflicts_user_1"
+    "user": null
   },
   {
-    "name": "KAWA",
-    "external_url": "https://test.api.com/track/kawa",
-    "uri": "uri:track:kawa",
+    "name": "SUPERNOVA",
+    "external_url": "https://test.api.com/track/supernova",
+    "uri": "uri:track:supernova",
     "artists": [
       {
-        "name": "Alvaro Diaz",
-        "url": "https://test.api.com/artist/alvaro-diaz"
+        "name": "Ralphie Choo",
+        "url": "https://test.api.com/artist/ralphie-choo"
       }
     ],
-    "album": "SAYONARA",
-    "cover_art": "https://test.api.com/track/kawa/cover",
-    "preview": "https://test.api.com/track/kawa/preview",
-    "user": "no_conflicts_user_1"
+    "album": "SUPERNOVA",
+    "cover_art": "https://test.api.com/track/supernova/cover",
+    "preview": "https://test.api.com/track/supernova/preview",
+    "user": "no_conflicts_user_2"
   }
 ]

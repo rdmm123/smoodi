@@ -12,7 +12,7 @@
       "album": "SUPERNOVA",
       "cover_art": "https://test.api.com/track/voycontodo/cover",
       "preview": "https://test.api.com/track/voycontodo/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "Sublime",
@@ -27,7 +27,7 @@
       "album": "Corazón Cromado",
       "cover_art": "https://test.api.com/track/sublime/cover",
       "preview": "https://test.api.com/track/sublime/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "El Sentido de la Vida",
@@ -42,7 +42,7 @@
       "album": "El Periplo del Héroe",
       "cover_art": "https://test.api.com/track/el-sentido-de-la-vida/cover",
       "preview": "https://test.api.com/track/el-sentido-de-la-vida/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "Ahora No Me Lloren",
@@ -57,7 +57,7 @@
       "album": "El Periplo del Héroe",
       "cover_art": "https://test.api.com/track/ahora-no-me-lloren/cover",
       "preview": "https://test.api.com/track/ahora-no-me-lloren/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "TE VI EN MIS PESADILLAS",
@@ -72,7 +72,7 @@
       "album": "SAYONARA",
       "cover_art": "https://test.api.com/track/te-vi-en-mis-pesadillas/cover",
       "preview": "https://test.api.com/track/te-vi-en-mis-pesadillas/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "MAMI 100PRE SABE (INTERLUDE)",
@@ -87,7 +87,7 @@
       "album": "SAYONARA",
       "cover_art": "https://test.api.com/track/mami-100pre-sabe-(interlude)/cover",
       "preview": "https://test.api.com/track/mami-100pre-sabe-(interlude)/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "El Rapto de Perséfone",
@@ -102,7 +102,7 @@
       "album": "El Periplo del Héroe",
       "cover_art": "https://test.api.com/track/el-rapto-de-perséfone/cover",
       "preview": "https://test.api.com/track/el-rapto-de-perséfone/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "Blue Jeans Y Un Crop Top",
@@ -117,7 +117,7 @@
       "album": "PO2054AZ (Vol.I)",
       "cover_art": "https://test.api.com/track/blue-jeans-y-un-crop-top/cover",
       "preview": "https://test.api.com/track/blue-jeans-y-un-crop-top/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "SUPERNOVA",
@@ -132,7 +132,7 @@
       "album": "SUPERNOVA",
       "cover_art": "https://test.api.com/track/supernova/cover",
       "preview": "https://test.api.com/track/supernova/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     },
     {
       "name": "Cristina",
@@ -147,6 +147,6 @@
       "album": "Sorry, Estoy en Mi Darkera",
       "cover_art": "https://test.api.com/track/cristina/cover",
       "preview": "https://test.api.com/track/cristina/preview",
-      "user": "no_conflicts_user_2"
+      "user": null
     }
 ]

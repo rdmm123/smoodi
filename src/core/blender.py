@@ -147,9 +147,10 @@ class Blender:
                     remaining_users.add(owner)
                 else:
                     new_owner = random.choice((owner, current_user))
+                    print('new_owner', new_owner)
                     if new_owner == current_user:
                         existing_track.user = current_user
-                        owner_stack_handler
+                        owner_stack_handler.pull_from_pool()
                         remaining_users.add(owner)
                     else:
                         user_stack_handler.pull_from_pool()

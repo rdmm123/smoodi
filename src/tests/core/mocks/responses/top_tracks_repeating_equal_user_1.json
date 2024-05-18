@@ -1,0 +1,152 @@
+[
+  {
+    "name": "Not Like Us",
+    "external_url": "https://test.api.com/track/not-like-us",
+    "uri": "uri:track:not-like-us",
+    "artists": [
+      {
+        "name": "Kendrick Lamar",
+        "url": "https://test.api.com/artist/kendrick-lamar"
+      }
+    ],
+    "album": "Not Like Us",
+    "cover_art": "https://test.api.com/track/not-like-us/cover",
+    "preview": "https://test.api.com/track/not-like-us/preview",
+    "user": null
+  },
+  {
+    "name": "euphoria",
+    "external_url": "https://test.api.com/track/euphoria",
+    "uri": "uri:track:euphoria",
+    "artists": [
+      {
+        "name": "Kendrick Lamar",
+        "url": "https://test.api.com/artist/kendrick-lamar"
+      }
+    ],
+    "album": "euphoria",
+    "cover_art": "https://test.api.com/track/euphoria/cover",
+    "preview": "https://test.api.com/track/euphoria/preview",
+    "user": null
+  },
+  {
+    "name": "Sublime",
+    "external_url": "https://test.api.com/track/sublime",
+    "uri": "uri:track:sublime",
+    "artists": [
+      {
+        "name": "Sen Senra",
+        "url": "https://test.api.com/artist/sen-senra"
+      }
+    ],
+    "album": "Corazón Cromado",
+    "cover_art": "https://test.api.com/track/sublime/cover",
+    "preview": "https://test.api.com/track/sublime/preview",
+    "user": null
+  },
+  {
+    "name": "meet the grahams",
+    "external_url": "https://test.api.com/track/meet-the-grahams",
+    "uri": "uri:track:meet-the-grahams",
+    "artists": [
+      {
+        "name": "Kendrick Lamar",
+        "url": "https://test.api.com/artist/kendrick-lamar"
+      }
+    ],
+    "album": "meet the grahams",
+    "cover_art": "https://test.api.com/track/meet-the-grahams/cover",
+    "preview": "https://test.api.com/track/meet-the-grahams/preview",
+    "user": null
+  },
+  {
+    "name": "El Censor",
+    "external_url": "https://test.api.com/track/el-censor",
+    "uri": "uri:track:el-censor",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/el-censor/cover",
+    "preview": "https://test.api.com/track/el-censor/preview",
+    "user": null
+  },
+  {
+    "name": "De la Rosa Prada",
+    "external_url": "https://test.api.com/track/de-la-rosa-prada",
+    "uri": "uri:track:de-la-rosa-prada",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/de-la-rosa-prada/cover",
+    "preview": "https://test.api.com/track/de-la-rosa-prada/preview",
+    "user": null
+  },
+  {
+    "name": "Dios Funciona",
+    "external_url": "https://test.api.com/track/dios-funciona",
+    "uri": "uri:track:dios-funciona",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/dios-funciona/cover",
+    "preview": "https://test.api.com/track/dios-funciona/preview",
+    "user": null
+  },
+  {
+    "name": "La Balsa de la Medusa",
+    "external_url": "https://test.api.com/track/la-balsa-de-la-medusa",
+    "uri": "uri:track:la-balsa-de-la-medusa",
+    "artists": [
+      {
+        "name": "Nico Miseria",
+        "url": "https://test.api.com/artist/nico-miseria"
+      }
+    ],
+    "album": "El Periplo del Héroe",
+    "cover_art": "https://test.api.com/track/la-balsa-de-la-medusa/cover",
+    "preview": "https://test.api.com/track/la-balsa-de-la-medusa/preview",
+    "user": null
+  },
+  {
+    "name": "Family Matters",
+    "external_url": "https://test.api.com/track/family-matters",
+    "uri": "uri:track:family-matters",
+    "artists": [
+      {
+        "name": "Drake",
+        "url": "https://test.api.com/artist/drake"
+      }
+    ],
+    "album": "Family Matters",
+    "cover_art": "https://test.api.com/track/family-matters/cover",
+    "preview": "https://test.api.com/track/family-matters/preview",
+    "user": null
+  },
+  {
+    "name": "SUPERNOVA",
+    "external_url": "https://test.api.com/track/supernova",
+    "uri": "uri:track:supernova",
+    "artists": [
+      {
+        "name": "Ralphie Choo",
+        "url": "https://test.api.com/artist/ralphie-choo"
+      }
+    ],
+    "album": "SUPERNOVA",
+    "cover_art": "https://test.api.com/track/supernova/cover",
+    "preview": "https://test.api.com/track/supernova/preview",
+    "user": "no_conflicts_user_2"
+  }
+]
