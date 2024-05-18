@@ -19,7 +19,7 @@ class MockClient:
         response_file = responses_folder / f"top_tracks_{user.api_id}_{user.id}.json"
 
         if not response_file.exists():
-            raise ValueError(f'Response file not found {user.id}.json')
+            raise ValueError(f'Response file not found {response_file.as_posix()}')
         
         with response_file.open() as f:
             response = json.load(f)
@@ -32,7 +32,7 @@ class MockClient:
             track.user = user.id
             tracks.append(track)
         
-        return tracks
+        return tracks[:amount]
     
     def create_playlist(self,
                         *,

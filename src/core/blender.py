@@ -47,10 +47,6 @@ class StackHandler:
     def pull_from_pool(self) -> None:
         self.stack.append(self.pool.popleft())
 
-    def pop_left_and_pull_from_pool(self) -> Track:
-        self.pull_from_pool()
-        return self.stack.popleft()
-
 
 class Blender:
     def __init__(
@@ -76,11 +72,13 @@ class Blender:
 
     def _set_stacks_per_user(self) -> None:
         songs_per_user, extra_song_count = divmod(self.playlist_length, len(self.users))
+        print(songs_per_user, extra_song_count)
         for i, user in enumerate(self.users):
             user_obj = self.users[user]
 
             songs = songs_per_user
             if i < extra_song_count:
+                print(user)
                 songs += 1
 
             all_tracks = self.client.get_top_tracks_from_user(user_obj, songs * 2)
@@ -88,6 +86,7 @@ class Blender:
             self._stacks_per_user[user] = StackHandler(
                 all_tracks[:songs], all_tracks[songs:]
             )
+            print(user, self._stacks_per_user[user].track_amount)
 
     def _all_stacks_empty(self) -> bool:
         return all(len(sh.stack) == 0 for sh in self._stacks_per_user.values())
@@ -111,6 +110,7 @@ class Blender:
         return False
 
     def blend(self) -> list[Track]:
+        print(len(self.playlist))
         if len(self.playlist) == self.playlist_length:
             return self.playlist
 
