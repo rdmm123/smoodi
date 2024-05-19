@@ -4,6 +4,7 @@ import ErrorPage from 'pages/ErrorPage';
 import HomePage from 'pages/HomePage';
 import SessionPage from "pages/SessionPage";
 import BlendifyPage from 'pages/BlendifyPage';
+import AfterLoginPage from 'pages/AfterLoginPage';
 import { fetchCurrentUser } from 'services/api';
 
 const userLoader = async () => {
@@ -49,7 +50,11 @@ const routes: RouteObject[] = [
         element: <BlendifyPage />,
         loader: userLoader
       }
-    ]
+    ],
+  },
+  {
+    path: "/after_login",
+    element: <AfterLoginPage />
   }
 ];
 

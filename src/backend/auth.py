@@ -80,7 +80,6 @@ def callback() -> ResponseReturnValue:
     else:
         user_id = existing_user_id
 
-    resp = make_response(redirect(redirect_to))
     user.id = user_id
     user_repository.save_user(user)
 
@@ -99,8 +98,8 @@ def callback() -> ResponseReturnValue:
             )
 
         del session["main_user_id"]
-        return resp  # TODO: change to redirect to login_result
+        return redirect("/after_login")
 
     session["user_id"] = user.id
     session.permanent = True
-    return resp
+    return redirect(redirect_to)
