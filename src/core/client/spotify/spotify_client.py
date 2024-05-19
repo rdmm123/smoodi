@@ -7,7 +7,7 @@ from typing import Any, Iterable
 from flask import current_app
 from collections.abc import Sequence
 
-from src.core.helpers import get_missing_keys, LoadFromEnvMixin, truncate_text
+from src.core.helpers import get_missing_keys, load_from_env, truncate_text
 from src.core.client.base import (
     Client,
     SUCCESS_STATUSES,
@@ -21,7 +21,8 @@ from src.core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPla
 from src.core.storage.base import Storage
 
 
-class SpotifyClient(LoadFromEnvMixin, Client):
+@load_from_env
+class SpotifyClient(Client):
     SPOTIFY_AUTH_URL = "https://accounts.spotify.com"
     SPOTIFY_API_URL = "https://api.spotify.com/v1"
 
@@ -47,7 +48,6 @@ class SpotifyClient(LoadFromEnvMixin, Client):
 
     def __init__(self, storage: Storage) -> None:
         self._storage = storage
-        super().__init__()
 
     def _make_request(
         self, method: str, keys_to_check: Iterable[str] = [], **request_kwargs: Any

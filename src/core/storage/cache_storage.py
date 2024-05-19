@@ -2,10 +2,11 @@ import redis
 from typing import Any, Collection
 
 from src.core.storage.base import Storage
-from src.core.helpers import LoadFromEnvMixin
+from src.core.helpers import load_from_env
 
 
-class CacheStorage(Storage, LoadFromEnvMixin):
+@load_from_env
+class CacheStorage(Storage):
     host: str = ""
     port: str = ""
     username: str = ""
@@ -19,7 +20,6 @@ class CacheStorage(Storage, LoadFromEnvMixin):
     }
 
     def __init__(self) -> None:
-        self._load_attrs_from_env()
         self.cache_client = redis.Redis(
             self.host, int(self.port), username=self.username, password=self.password
         )
