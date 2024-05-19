@@ -6,6 +6,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd())
   const protocol = mode == 'development' ? 'http' : 'https'
+  const backendHost = env.VITE_BACKEND_HOST || '127.0.0.1:5000'
   return {
     plugins: [react(), tsconfigPaths()],
     root: './src/frontend',
@@ -23,7 +24,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     define: {
-      BACKEND_HOST: JSON.stringify(protocol + '://' + env.VITE_BACKEND_HOST)
+      BACKEND_HOST: JSON.stringify(protocol + '://' + backendHost)
     }
   }
 })

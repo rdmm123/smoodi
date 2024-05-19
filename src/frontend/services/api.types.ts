@@ -68,3 +68,7 @@ export interface Playlist {
     public?: boolean
     collaborative?: boolean
 }
+
+export interface ErrorResponse {
+    message: string
+}

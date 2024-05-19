@@ -1,5 +1,5 @@
 import datetime as dt
-from flask import Blueprint, session
+from flask import Blueprint, session, abort
 from flask.typing import ResponseReturnValue
 from dataclasses import asdict
 
@@ -19,10 +19,10 @@ def get_user(user_id: str) -> ResponseReturnValue:
     try:
         user = user_repository.get_user(user_id)
     except InvalidJsonException:
-        return {"message": f"User {user_id} data has an invalid format."}, 400
+        abort(400, f"User {user_id} data has an invalid format.")
 
     if not user:
-        return {"message": f"User {user_id} not found!"}, 404
+        abort(404, f"User {user_id} not found!")
 
     new_auth_data = client.handle_token_refresh(
         user.token, user.refresh_token, dt.datetime.fromisoformat(user.token_expires)
@@ -44,7 +44,7 @@ def user_session(user_id: str) -> ResponseReturnValue:
     try:
         session = user_repository.get_user_session(user_id)
     except InvalidJsonException:
-        return {"message": f"User {user_id} data has an invalid format."}, 400
+        abort(400, f"User {user_id} data has an invalid format.")
 
     session_dict: list[dict[str, str]] = []
     for user in session:

@@ -3,6 +3,7 @@ import { Outlet, useLoaderData } from "react-router-dom";
 import Header from "components/Header";
 import { UserContextProvider } from "contexts/UserContext";
 import { ErrorLoader } from "router";
+import ErrorMessage from "components/ErrorMessage";
 
 export default function App() {
   const { error } = useLoaderData() as ErrorLoader;
@@ -14,10 +15,7 @@ export default function App() {
     
       <section className="p-10 flex flex-col justify-center items-center w-100" id="content">
 
-        {error &&
-          <div className="bg-red-200 outline outline-1 outline-red-500 text-red-500 rounded-xl p-3 text-center mb-5">
-            <p className="text-lg">{error}</p>
-          </div>}
+        {error && <ErrorMessage message={error} />}
           
           <Outlet />
       </section>

@@ -8,12 +8,19 @@ from flask import current_app
 from collections.abc import Sequence
 
 from src.core.helpers import get_missing_keys, LoadFromEnvMixin, truncate_text
-from src.core.client.base import Client, SUCCESS_STATUSES, Track, User, Playlist
+from src.core.client.base import (
+    Client,
+    SUCCESS_STATUSES,
+    Track,
+    User,
+    Playlist,
+    InvalidResponseException,
+    InvalidStatusException,
+)
 from src.core.client.spotify.models import SpotifyUser, SpotifyTrack, SpotifyPlaylist
 from src.core.storage.base import Storage
 
 
-# TODO: use cache to save requests made
 class SpotifyClient(LoadFromEnvMixin, Client):
     SPOTIFY_AUTH_URL = "https://accounts.spotify.com"
     SPOTIFY_API_URL = "https://api.spotify.com/v1"
@@ -66,7 +73,9 @@ class SpotifyClient(LoadFromEnvMixin, Client):
         )
 
         if r.status_code not in SUCCESS_STATUSES:
-            raise Exception(f"Error {r.status_code} received from Spotify API")
+            raise InvalidStatusException(
+                "Error received from Spotify API", r.status_code
+            )
 
         resp: dict[str, Any] = r.json()
 
@@ -75,7 +84,9 @@ class SpotifyClient(LoadFromEnvMixin, Client):
 
         missing_keys = get_missing_keys(resp, *keys_to_check)
         if missing_keys:
-            raise Exception(f"{', '.join(missing_keys)} not found in response.")
+            raise InvalidResponseException(
+                f"{', '.join(missing_keys)} not found in response."
+            )
 
         return resp
 

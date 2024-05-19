@@ -1,5 +1,5 @@
 import datetime as dt
-from flask import Blueprint, request
+from flask import Blueprint, request, abort
 from flask.typing import ResponseReturnValue
 
 from src.backend import client, user_repository
@@ -17,13 +17,13 @@ def blend() -> ResponseReturnValue:
     create = body.get("create", False)
 
     if "users" not in body or not body["users"]:
-        return {"message": "Users not in request"}, 400
+        abort(400, "Users not in request")
 
     users = user_repository.get_users(body["users"])
 
     for user in users:
         if not user or not user.id:
-            return {"message": f"User {user} not found"}, 400
+            abort(400, f"User {user} not found")
 
         new_auth_data = client.handle_token_refresh(
             user.token,

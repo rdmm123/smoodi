@@ -7,6 +7,7 @@ import Playlist from "components/Playlist";
 import CurrentSession from "components/CurrentSession";
 
 import PlaylistForm, { OnSubmitArgs } from "components/PlaylistForm";
+import ErrorMessage from "components/ErrorMessage";
 
 export default function BlendifyPage() {
   const { user, session } = useUserContext();
@@ -19,25 +20,37 @@ export default function BlendifyPage() {
   const initialPlaylist: PlaylistType = {tracks: []}
   const [playlist, setPlaylist] = useState(initialPlaylist);
   const isPlaylistCreated = !!playlist.id;
+  
+  const [apiError, setApiError] = useState('');
 
   // const [previewLoading, setPreviewLoading] = useState(false);
   // const [blendLoading, setBlendLoading] = useState(false);
   
   const handleFormSubmit = async ({ formData }: OnSubmitArgs) => {
-    const previewPlaylist = await createBlend(blendUsers, parseInt(formData.playlistLength));
-    setPlaylist(previewPlaylist);
+    const previewPlaylistResponse = await createBlend(blendUsers, parseInt(formData.playlistLength));
+    if (!previewPlaylistResponse.isSuccess) {
+      return setApiError(previewPlaylistResponse.message || '')
+    }
+    setPlaylist(previewPlaylistResponse.playlist);
   }
 
   const handlePlaylistConfirm = async(e: MouseEvent) => {    
     e.preventDefault();
 
-    const createdPlaylist = await createBlend(blendUsers, playlist.tracks.length, true);
+    const createdPlaylistResponse = await createBlend(blendUsers, playlist.tracks.length, true);
+    if (!createdPlaylistResponse.isSuccess) {
+      setApiError(createdPlaylistResponse.message ?? '')
+      return;
+    }
+
+    const createdPlaylist = createdPlaylistResponse.playlist;
     if (createdPlaylist.id) {
       setPlaylist(createdPlaylist);
     }
   }
 
   return <>
+    { apiError &&  <ErrorMessage message={apiError} />}
     <h1 className="text-5xl font-bold mb-9 text-center">Let's make a blend!</h1>
     <div className="flex justify-around w-3/4">
       <PlaylistForm onSubmit={handleFormSubmit} />

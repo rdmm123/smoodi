@@ -84,3 +84,13 @@ class Client(Protocol):
         self, user: User, playlist: Playlist, tracks: Sequence[Track]
     ) -> Playlist:
         raise NotImplementedError()
+
+
+class InvalidStatusException(Exception):
+    def __init__(self, message: str, status_code: int) -> None:
+        super().__init__(message)
+        self.status_code = status_code
+
+
+class InvalidResponseException(Exception):
+    pass

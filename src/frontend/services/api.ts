@@ -1,4 +1,4 @@
-import { BlendResponse, User, UserResponse, UserSessionResponse, Playlist } from "./api.types";
+import { BlendResponse, User, UserResponse, UserSessionResponse, Playlist, ErrorResponse } from "./api.types";
 
 const API_URL = BACKEND_HOST + '/api';
 
@@ -40,7 +40,13 @@ export const createBlend = async (users: User[], playlistLength: number, create:
     })
 
     if (!response.ok) {
-        return { tracks: [] }
+        const errorResponse: ErrorResponse = await response.json()
+        return {
+            isSuccess: false,
+            message: `Ooops! Something went wrong: ${errorResponse.message}. Please try again later.`,
+            statusCode: response.status,
+            playlist: { tracks: [] } as Playlist
+        }
     }
 
     const blendResponse: BlendResponse = await response.json()
@@ -51,5 +57,5 @@ export const createBlend = async (users: User[], playlistLength: number, create:
         user: users.filter(user => user.id === track.user)[0]
     }))
 
-    return playlist;
+    return { isSuccess: true, playlist };
 }
