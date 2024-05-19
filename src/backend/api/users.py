@@ -25,7 +25,7 @@ def get_user(user_id: str) -> ResponseReturnValue:
         return {"message": f"User {user_id} not found!"}, 404
 
     new_auth_data = client.handle_token_refresh(
-        user.token, user.token_expires, dt.datetime.fromisoformat(user.token_expires)
+        user.token, user.refresh_token, dt.datetime.fromisoformat(user.token_expires)
     )
 
     if new_auth_data["refreshed"]:
