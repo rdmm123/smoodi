@@ -1,22 +1,11 @@
-import { createBrowserRouter, redirect, RouteObject } from 'react-router-dom';
+import { createBrowserRouter, RouteObject } from 'react-router-dom';
 import App from 'components/App';
 import ErrorPage from 'pages/ErrorPage';
 import HomePage from 'pages/HomePage';
 import SessionPage from "pages/SessionPage";
 import BlendifyPage from 'pages/BlendifyPage';
 import AfterLoginPage from 'pages/AfterLoginPage';
-import { fetchCurrentUser } from 'services/api';
-
-const userLoader = async () => {
-  // TODO: check if this generates a duplicate call with the context
-  const user = await fetchCurrentUser();
-
-  if (!user) {
-    return redirect('/')
-  }
-
-  return null;
-}
+import PrivatePage from 'pages/PrivatePage';
 
 export interface ErrorLoader {
   error: string
@@ -42,13 +31,11 @@ const routes: RouteObject[] = [
       },
       {
         path: "/session",
-        element: <SessionPage />,
-        loader: userLoader
+        element: <PrivatePage><SessionPage /></PrivatePage>,
       },
       {
         path: "/blendify",
-        element: <BlendifyPage />,
-        loader: userLoader
+        element: <PrivatePage><BlendifyPage /></PrivatePage>,
       }
     ],
   },
