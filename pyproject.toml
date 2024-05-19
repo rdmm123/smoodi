@@ -1,0 +1,15 @@
+[tool.coverage.run]
+omit = [
+    "src/tests/*"
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov --cov-report term-missing --cov-config=.coveragerc -vv"
+testpaths = [
+    "src/"
+]
+
+[tool.mypy]
+packages = ["src"]
+exclude = ["tests"]
+strict = true
