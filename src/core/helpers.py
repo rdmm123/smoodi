@@ -6,6 +6,7 @@ from typing import Dict, Any
 
 from flask import url_for, request
 
+
 class LoadFromEnvMixin:
     load_from_env: Dict[str, str] = {}
 
@@ -17,14 +18,14 @@ class LoadFromEnvMixin:
             value = os.getenv(env_var)
 
             if value is None:
-                raise Exception(f'{env_var} not found in environment variables.')
-            
+                raise Exception(f"{env_var} not found in environment variables.")
+
             setattr(self, attribute, value)
 
 
 def get_random_string(length: int) -> str:
-    return ''.join(
-        random.choices(string.ascii_letters + string.digits, k=length))
+    return "".join(random.choices(string.ascii_letters + string.digits, k=length))
+
 
 def get_missing_keys(d: Dict[str, Any], *keys_to_check: str) -> list[str]:
     missing = []
@@ -34,16 +35,19 @@ def get_missing_keys(d: Dict[str, Any], *keys_to_check: str) -> list[str]:
 
     return missing
 
+
 def get_absolute_url_for(view: str) -> str:
-    return request.host_url.rstrip('/') + url_for(view)
+    return request.host_url.rstrip("/") + url_for(view)
+
 
 def is_email_valid(email: str) -> bool:
-    match = re.match(r'^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$', email)
+    match = re.match(r"^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$", email)
 
     if match is None:
         return False
-    
+
     return True
 
+
 def truncate_text(text: str, max_length: int) -> str:
-    return (text[:max_length] + '... (truncated)') if len(text) > max_length else text
+    return (text[:max_length] + "... (truncated)") if len(text) > max_length else text

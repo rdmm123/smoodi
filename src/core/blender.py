@@ -39,7 +39,9 @@ DEFAULT_PLAYLIST_LENGTH = 100
 
 
 class StackHandler:
-    def __init__(self, stack: Collection[Track] = [], pool: Collection[Track] = []) -> None:
+    def __init__(
+        self, stack: Collection[Track] = [], pool: Collection[Track] = []
+    ) -> None:
         self.stack = deque(stack)
         self.pool = deque(pool)
         self.track_amount = len(stack) + len(pool)
@@ -57,7 +59,7 @@ class Blender:
     ) -> None:
         self.playlist: list[Track] = []
         self._songs_per_user: int = 0
-        
+
         self.users = {}
         for u in users:
             assert u.id is not None
@@ -89,7 +91,7 @@ class Blender:
 
     def _all_stacks_empty(self) -> bool:
         return all(len(sh.stack) == 0 for sh in self._stacks_per_user.values())
-    
+
     def _get_remaining_users(self) -> set[str]:
         for user in self._stacks_per_user:
             if len(self._stacks_per_user[user].stack) == 0:
@@ -98,12 +100,12 @@ class Blender:
             self._remaining_users.add(user)
 
         return self._remaining_users
-    
+
     def _track_in_playlist(self, track: Track) -> bool:
         for p_track in self.playlist:
             if p_track.uri == track.uri:
                 return True
-        
+
         return False
 
     def blend(self) -> list[Track]:
