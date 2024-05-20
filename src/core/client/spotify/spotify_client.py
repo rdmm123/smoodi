@@ -201,14 +201,17 @@ class SpotifyClient(Client):
         offset = 0
         max_limit = 50
         remaining = amount
-        time_range = "short_term"
+        time_ranges = ("short_term", "medium_term", "long_term")
+        time_range_idx = 0
 
         tracks: list[SpotifyTrack] = []
         while remaining > 0:
             limit = remaining if remaining < max_limit else max_limit
 
             query_params = {
-                "time_range": time_range,  # TODO: make this customizable
+                "time_range": time_ranges[
+                    time_range_idx
+                ],  # TODO: make this customizable
                 "limit": limit,
                 "offset": offset,
             }
@@ -220,16 +223,16 @@ class SpotifyClient(Client):
                 headers={"Authorization": f"Bearer {user.token}"},
             )
 
-            # TODO: Make it so that we use all of the ones for last mont first
-            # And then fill in the rest with 6 months. Could do the following logic:
-            # Simply check if the list if empty (it'll get to that point lol)
-            # and then retry using the following term 'medium_term'
-            if resp["total"] < amount:
+            if len(resp["items"]) == 0:
                 current_app.logger.info(
-                    f"User {user.email}'s top tracks from last month arent enough."
-                    f"Amount requested: {amount}, total: {resp['total']}."
+                    f"User {user.email}'s top tracks using {time_ranges[time_range_idx]} aren't enough."
+                    f"Amount requested: {amount}, current total: {len(tracks)}."
                 )
-                time_range = "medium_term"
+                if time_range_idx >= len(time_ranges) - 1:
+                    remaining = 0
+                else:
+                    time_range_idx += 1
+
                 continue
 
             for track in resp["items"]:
