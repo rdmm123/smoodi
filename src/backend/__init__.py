@@ -33,6 +33,7 @@ def create_app() -> Flask:
         InvalidStatusException, error_handlers.handle_invalid_api_status
     )
     app.register_error_handler(HTTPException, error_handlers.handle_http_exception)
+    app.register_error_handler(Exception, error_handlers.handle_general_exception)
 
     if app.config["ENV"] == "development":
         from flask_cors import CORS

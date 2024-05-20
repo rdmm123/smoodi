@@ -27,24 +27,32 @@ export const fetchUserSession = async ({ id }: User) => {
 }
 
 export const createBlend = async (users: User[], playlistLength: number, create: boolean = false) => {
-    const response = await fetch(`${API_URL}/blender/blend`, {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-          },
-        body: JSON.stringify({
-            users: users.map(user => user.id),
-            playlist_length: playlistLength,
-            create: create
+    let response;
+    try {
+        response = await fetch(`${API_URL}/blender/blend`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+              },
+            body: JSON.stringify({
+                users: users.map(user => user.id),
+                playlist_length: playlistLength,
+                create: create
+            })
         })
-    })
+    } catch {
+        return {
+            isSuccess: false,
+            message: `An unknown error has ocurred. Please try again later.`,
+            playlist: { tracks: [] } as Playlist
+        }
+    }
 
     if (!response.ok) {
         const errorResponse: ErrorResponse = await response.json()
         return {
             isSuccess: false,
             message: `Ooops! Something went wrong: ${errorResponse.message}. Please try again later.`,
-            statusCode: response.status,
             playlist: { tracks: [] } as Playlist
         }
     }

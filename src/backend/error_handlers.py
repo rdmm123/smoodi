@@ -1,5 +1,6 @@
 import json
-from flask import jsonify
+import traceback
+from flask import current_app
 
 from flask.typing import ResponseReturnValue
 
@@ -9,11 +10,11 @@ from src.core.client.base import InvalidResponseException, InvalidStatusExceptio
 
 
 def handle_invalid_api_response(e: InvalidResponseException) -> ResponseReturnValue:
-    return jsonify(message=str(e)), 400
+    return {"message": str(e)}, 400
 
 
 def handle_invalid_api_status(e: InvalidStatusException) -> ResponseReturnValue:
-    return jsonify(message=str(e)), e.status_code
+    return {"message": str(e)}, e.status_code
 
 
 def handle_http_exception(e: HTTPException) -> ResponseReturnValue:
@@ -29,3 +30,8 @@ def handle_http_exception(e: HTTPException) -> ResponseReturnValue:
     )
     response.content_type = "application/json"
     return response
+
+
+def handle_general_exception(e: Exception) -> ResponseReturnValue:
+    current_app.logger.error(f"Uncaught exception: \n{traceback.format_exc()}")
+    return {"message": "Internal server error"}, 500
