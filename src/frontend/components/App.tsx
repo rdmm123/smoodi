@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData } from "react-router-dom";
+import { Outlet, useLoaderData, useLocation } from "react-router-dom";
 
 import Header from "components/Header";
 import { UserContextProvider } from "contexts/UserContext";
@@ -7,17 +7,17 @@ import ErrorMessage from "components/ErrorMessage";
 
 export default function App() {
   const { error } = useLoaderData() as ErrorLoader;
+  const location = useLocation();
 
+  const isHomePage = location.pathname == '/';
   return (
     <>
     <UserContextProvider>
-      <Header />
+      {!isHomePage && <Header />}
     
-      <section className="p-10 flex flex-col justify-center items-center w-100" id="content">
-
+      <section className="h-full w-full text-my-rose flex items-center justify-center" id="content">
         {error && <ErrorMessage message={error} />}
-          
-          <Outlet />
+        <Outlet />
       </section>
     </UserContextProvider>
     </>
