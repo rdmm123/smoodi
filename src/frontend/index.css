@@ -1,7 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
+
+*, *::before, *::after{
+    box-sizing: border-box; 
+}
+
 body {
     height: 100dvh;
     background-color: #4C1A57;
@@ -9,7 +13,8 @@ body {
 
 #root {
     height: 100dvh;
-    
+    display: flex;
+    flex-direction: column;
 }
 
 @font-face {

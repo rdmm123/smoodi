@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom"
-import BlendifyLogo from 'assets/blendify-logo.svg'
 import { useUserContext } from "contexts/UserContext"
 
 import AnchorButton from "components/Button/AnchorButton";
+import { LogoSize, Logo } from "components/Logo";
 
 function Header() {
   const { user } = useUserContext();
 
   return (
-    <section className="flex flex-row p-5 shadow-md items-center rounded-lg" id="header">
-      <Link to={`/`} className="grow">
-        <img src={BlendifyLogo} alt="Blendify logo" className="w-40" />
+    <header className="flex flex-row p-5 drop-shadow-xl items-center justify-between rounded-lg bg-my-purple-950">
+      <Link to={`/`}>
+        <Logo size={LogoSize.LARGE} />
       </Link>
       {user?.email
       ? <div className="flex items-center gap-5">
@@ -24,7 +24,7 @@ function Header() {
         </AnchorButton>
       }
 
-    </section>
+    </header>
   )
 }
 
