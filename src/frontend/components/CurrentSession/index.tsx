@@ -1,12 +1,14 @@
 import { useUserContext } from "contexts/UserContext"
+import SessionUserCard from "./SessionUserCard";
+
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function CurrentSession() {
     const { session } = useUserContext();
     // TODO: Add link to spotify for each user
-    return <div className="rounded-lg outline outline-1 outline-slate-200 p-5">
-        <h1 className="text-xl font-bold text-green-500">Current session:</h1>
-        <ul>
-          {session.map((user) => <li key={user.email}>{user.email}</li>)}
-        </ul>
+    return <ScrollArea className="h-[26rem] w-full rounded-xl bg-my-purple-950">
+      <div className="flex flex-wrap gap-4 justify-center p-4">
+        {session.map((user) => <SessionUserCard user={user} key={user.id} />)}
       </div>
+    </ScrollArea>
 }
