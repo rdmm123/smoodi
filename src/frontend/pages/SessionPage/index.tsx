@@ -19,8 +19,11 @@ export default function SessionPage() {
   }, []);
 
   return <>
-    <h1 className="text-5xl font-bold mb-9 text-center">Gather your friends!</h1>
-    <div className="flex gap-10 justify-center">
+    <h1 className="text-5xl font-bold mb-10 text-center font-serif">Your Session</h1>
+    <p className="text-xl text-center text-slate-50 mb-3">Share this url with your friends for them to join!</p>
+    <CopyInput text={`${BACKEND_HOST}/auth/login/${user?.id}`} />
+    
+    {/* <div className="flex gap-10 justify-center">
       <div className="flex flex-col gap-5">
         <p className="text-2xl">Just follow these few steps and we'll be done in no time:</p>
         <ol className="text-xl list-decimal marker:font-bold marker:text-green-500 marker:text-xl space-y-3">
@@ -37,6 +40,6 @@ export default function SessionPage() {
         <LinkButton to="/blendify" color="green" light={false} className="text-center text-4xl self-center">Blendify</LinkButton>
       </div>
       <CurrentSession></CurrentSession>
-    </div>
+    </div> */}
   </>;
 }

@@ -13,7 +13,7 @@ export default function App() {
     <UserContextProvider>
       <Header />
     
-      <section className="grow self-center w-2/3 text-my-rose" id="content">
+      <section className="grow self-center py-12 w-2/3 text-my-rose" id="content">
         {error && <ErrorMessage message={error} />}
         <Outlet />
       </section>
