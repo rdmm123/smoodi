@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, Any, Self
+from flask import current_app
 
 from src.core.client.base import User, Artist, Track, Playlist
 
@@ -8,10 +9,12 @@ from src.core.client.base import User, Artist, Track, Playlist
 class SpotifyUser(User):
     @classmethod
     def from_api_response(cls, response: Dict[str, Any]) -> Self:
+        current_app.logger.info(f'Users images {response["images"]=}')
         return cls(
             name=response["display_name"],
             email=response["email"],
             api_id=response["id"],
+            image_url=response["images"][0]["url"],
         )
 
     def load_auth_data_from_response(self, auth_response: Dict[str, Any]) -> None:

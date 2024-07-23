@@ -1,29 +1,30 @@
+import React from 'react';
 import { Link } from "react-router-dom"
+import { Button } from "@/components/ui/button";
+
 import { useUserContext } from "contexts/UserContext"
-
-import AnchorButton from "components/Button/AnchorButton";
 import { LogoSize, Logo } from "components/Logo";
+import UserDropdown from './UserDropdown';
 
-function Header() {
+
+const LoginButton: React.FC = () => (
+  <Button asChild>
+    <a href={BACKEND_HOST + "/auth/login"}>Log In</a>
+  </Button>
+)
+
+function Header(): React.ReactElement {
   const { user } = useUserContext();
 
   return (
-    <header className="flex flex-row p-5 drop-shadow-xl items-center justify-between rounded-lg bg-my-purple-950">
+    <header className="flex flex-row p-4 drop-shadow-xl items-center justify-between rounded-lg bg-my-purple-950">
       <Link to={`/`}>
         <Logo size={LogoSize.LARGE} />
       </Link>
       {user?.email
-      ? <div className="flex items-center gap-5">
-          <h1 className="text-lg">Logged in as: <span className="underline text-blue-500">{user.email}</span></h1>
-          <AnchorButton href={BACKEND_HOST + "/auth/logout"} color="red" light={true}>
-            Log Out
-          </AnchorButton>
-      </div>
-      : <AnchorButton href={BACKEND_HOST + "/auth/login"} color="blue" light={false}>
-          Log In
-        </AnchorButton>
-      }
-
+      ?
+        <UserDropdown />
+      : <LoginButton />}
     </header>
   )
 }
