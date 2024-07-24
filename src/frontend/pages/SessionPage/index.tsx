@@ -1,7 +1,6 @@
 import { useUserContext } from "contexts/UserContext";
 import { useEffect } from "react";
 import CopyInput from "components/CopyInput";
-import LinkButton from "components/Button/LinkButton";
 import CurrentSession from "components/CurrentSession";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
