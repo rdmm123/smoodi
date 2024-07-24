@@ -7,15 +7,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage
-} from '@/components/ui/avatar';
+
 import { ChevronDown, LogOut } from "lucide-react";
 
 import { useUserContext } from "contexts/UserContext"
-import { getUserInitials, getUserDisplayName } from "utils/user";
+import {  getUserDisplayName } from "utils/user";
+import UserAvatar from "./UserAvatar";
 
 export default function UserDropdown() {
   const { user } = useUserContext();
@@ -27,10 +24,7 @@ export default function UserDropdown() {
   return <DropdownMenu>
     <DropdownMenuTrigger asChild>
       <Button variant={"ghost"} className='py-5 px-3'>
-        <Avatar className='w-9 h-9 mr-2'>
-          <AvatarImage src={user.image_url} />
-          <AvatarFallback>{getUserInitials(user)}</AvatarFallback>
-        </Avatar>
+        <UserAvatar user={user} className="size-9 mr-2" />
         <ChevronDown />
       </Button>
     </DropdownMenuTrigger>
