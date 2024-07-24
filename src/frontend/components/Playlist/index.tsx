@@ -3,8 +3,7 @@ import TrackCard from "components/Playlist/TrackCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PlaylistProps {
-  tracks: Track[],
-  onConfirm?: Function
+  tracks: Track[]
 }
 
 export default function Playlist({ tracks }: PlaylistProps) {

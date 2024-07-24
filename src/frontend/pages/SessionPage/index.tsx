@@ -17,7 +17,7 @@ export default function SessionPage() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, []);
+  });
 
   return <div className="flex flex-col items-center justify-center h-full gap-5">
     <h1 className="text-5xl font-bold text-center font-serif">Your Session</h1>

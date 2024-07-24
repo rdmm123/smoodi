@@ -30,7 +30,7 @@ const getFormSchema = (session: User[]) => {
 }
 
 interface PlaylistFormProps {
-  onSubmit?: Function,
+  onSubmit?(onSubmitArgs: OnSubmitArgs): void,
   allowCreate?: boolean
 }
 

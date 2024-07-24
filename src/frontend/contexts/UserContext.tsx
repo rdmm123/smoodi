@@ -14,7 +14,7 @@ const UserContext = createContext(initialContext)
 
 export function UserContextProvider({ children } : { children: React.ReactNode }) {
 
-  const initialUser: User = { name: '', email: '', id: ''}
+  const initialUser: User = { name: '', email: '', id: '', image_url: ''}
   const [user, setUser] = useState(initialUser);
 
   const initialSession: User[] = []

@@ -12,18 +12,16 @@ import SessionFooter from "components/CurrentSession/SessionFooter";
 
 export default function BlendifyPage() {
   const { user, session } = useUserContext();
-
-  if (!user) { return }
-
-  const blendUsers = [...session];
-  blendUsers.push(user);
-
   const initialPlaylist: PlaylistType = {tracks: []}
   const [playlist, setPlaylist] = useState(initialPlaylist);
 
   const [isPlaylistDialogOpen, setIsPlaylistDialogOpen] = useState(false);
   
   const [apiError, setApiError] = useState('');
+
+  if (!user) { return }
+
+  const blendUsers = [user, ...session];
   
   const handleFormSubmit = async ({ length, create }: OnSubmitArgs) => {
     const playlistResponse = await createBlend(blendUsers, length, create);

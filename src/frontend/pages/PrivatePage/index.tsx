@@ -10,7 +10,7 @@ export default function PrivatePage({ children }: { children: ReactNode }) {
         if (!user?.id) {
             navigate('/');
         }
-    }, [])
+    })
 
     return <>{children}</>
 }
