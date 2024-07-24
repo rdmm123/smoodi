@@ -12,7 +12,7 @@ type UserAvatarMergedProps = UserAvatarProps & React.ComponentPropsWithoutRef<ty
 
 export default function UserAvatar({ user, ...props }: UserAvatarMergedProps) {
   return <Avatar {...props}>
-    <AvatarImage src={user.image_url} />
+    <AvatarImage title={user.name} src={user.image_url} aria-label={user.name} />
     <AvatarFallback>{getUserInitials(user)}</AvatarFallback>
   </Avatar>
 }
