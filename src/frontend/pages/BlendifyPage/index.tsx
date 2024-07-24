@@ -26,8 +26,8 @@ export default function BlendifyPage() {
   // const [previewLoading, setPreviewLoading] = useState(false);
   // const [blendLoading, setBlendLoading] = useState(false);
   
-  const handleFormSubmit = async ({ formData }: OnSubmitArgs) => {
-    const previewPlaylistResponse = await createBlend(blendUsers, parseInt(formData.playlistLength));
+  const handleFormSubmit = async ({ length }: OnSubmitArgs) => {
+    const previewPlaylistResponse = await createBlend(blendUsers, length);
     if (!previewPlaylistResponse.isSuccess) {
       return setApiError(previewPlaylistResponse.message || '')
     }
@@ -51,7 +51,9 @@ export default function BlendifyPage() {
 
   return <>
     { apiError &&  <ErrorMessage message={apiError} />}
-    <h1 className="text-5xl font-bold mb-9 text-center">Let's make a blend!</h1>
+    <h1 className="text-5xl font-bold mb-9 text-center font-serif">Make your Blend!</h1>
+    <PlaylistForm onSubmit={handleFormSubmit} />
+    {/* <h1 className="text-5xl font-bold mb-9 text-center">Let's make a blend!</h1>
     <div className="flex justify-around w-3/4">
       <PlaylistForm onSubmit={handleFormSubmit} />
       <CurrentSession />
@@ -63,6 +65,6 @@ export default function BlendifyPage() {
         <div>
           Playlist Created, <a className="underline text-green-500" href={playlist.external_url} target="_blank">link</a>
         </div>
-      }
+      } */}
   </>
 }

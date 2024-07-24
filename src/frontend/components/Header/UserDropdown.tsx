@@ -34,9 +34,9 @@ export default function UserDropdown() {
         <ChevronDown />
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent>
+    <DropdownMenuContent align="end">
       <DropdownMenuLabel>{getUserDisplayName(user)}</DropdownMenuLabel>
-      <DropdownMenuSeparator />
+      <DropdownMenuSeparator className="bg-my-purple-800" />
       <DropdownMenuItem>
         <LogOut className="h-4 w-4 mr-2"></LogOut>
         <a href={BACKEND_HOST + "/auth/logout"}>Log Out</a>
