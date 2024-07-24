@@ -1,12 +1,11 @@
 import { useUserContext } from "contexts/UserContext";
-import { useState,  MouseEvent} from "react";
+import { useState } from "react";
 import { createBlend } from "services/api";
 
 import { Playlist as PlaylistType } from "services/api.types";
 import Playlist from "components/Playlist";
-import CurrentSession from "components/CurrentSession";
-
 import PlaylistForm, { OnSubmitArgs } from "components/PlaylistForm";
+import PlaylistDialog from "components/Playlist/PlaylistDialog";
 import ErrorMessage from "components/ErrorMessage";
 
 export default function BlendifyPage() {
@@ -19,53 +18,36 @@ export default function BlendifyPage() {
 
   const initialPlaylist: PlaylistType = {tracks: []}
   const [playlist, setPlaylist] = useState(initialPlaylist);
-  const isPlaylistCreated = !!playlist.id;
+
+  const [isPlaylistDialogOpen, setIsPlaylistDialogOpen] = useState(false);
   
   const [apiError, setApiError] = useState('');
-
-  // const [previewLoading, setPreviewLoading] = useState(false);
-  // const [blendLoading, setBlendLoading] = useState(false);
   
-  const handleFormSubmit = async ({ length }: OnSubmitArgs) => {
-    const previewPlaylistResponse = await createBlend(blendUsers, length);
-    if (!previewPlaylistResponse.isSuccess) {
-      return setApiError(previewPlaylistResponse.message || '')
-    }
-    setPlaylist(previewPlaylistResponse.playlist);
-  }
-
-  const handlePlaylistConfirm = async(e: MouseEvent) => {    
-    e.preventDefault();
-
-    const createdPlaylistResponse = await createBlend(blendUsers, playlist.tracks.length, true);
-    if (!createdPlaylistResponse.isSuccess) {
-      setApiError(createdPlaylistResponse.message ?? '')
-      return;
+  const handleFormSubmit = async ({ length, create }: OnSubmitArgs) => {
+    const playlistResponse = await createBlend(blendUsers, length, create);
+    if (!playlistResponse.isSuccess) {
+      return setApiError(playlistResponse.message || '')
     }
 
-    const createdPlaylist = createdPlaylistResponse.playlist;
-    if (createdPlaylist.id) {
-      setPlaylist(createdPlaylist);
+    if (create) {
+      if (!playlistResponse.playlist.id) {
+        return setApiError('There was an issue while creating your playlist. Please try again later.')
+      }
+
+      setIsPlaylistDialogOpen(true);
     }
+
+    setPlaylist(playlistResponse.playlist);
   }
 
   return <>
-    { apiError &&  <ErrorMessage message={apiError} />}
-    <h1 className="text-5xl font-bold mb-9 text-center font-serif">Make your Blend!</h1>
-    <PlaylistForm onSubmit={handleFormSubmit} />
-    <Playlist tracks={playlist.tracks} onConfirm={handlePlaylistConfirm}/>
-    {/* <h1 className="text-5xl font-bold mb-9 text-center">Let's make a blend!</h1>
-    <div className="flex justify-around w-3/4">
-      <PlaylistForm onSubmit={handleFormSubmit} />
-      <CurrentSession />
+    <div className="space-y-6">
+      <h1 className="text-5xl font-bold mb-9 text-center font-serif">Make your Blend!</h1>
+      <PlaylistForm onSubmit={handleFormSubmit} allowCreate={playlist.tracks.length > 0}/>
+      { apiError &&  <ErrorMessage message={apiError} />}
+      <Playlist tracks={playlist.tracks}/>
+      <PlaylistDialog open={isPlaylistDialogOpen} setOpen={setIsPlaylistDialogOpen} playlist={playlist} />
     </div>
-      {(playlist.tracks.length > 0 && !isPlaylistCreated) &&
-        <Playlist tracks={playlist.tracks} onConfirm={handlePlaylistConfirm}/>}
-      {
-        isPlaylistCreated &&
-        <div>
-          Playlist Created, <a className="underline text-green-500" href={playlist.external_url} target="_blank">link</a>
-        </div>
-      } */}
+    {/* TODO: Add current session footer */}
   </>
 }

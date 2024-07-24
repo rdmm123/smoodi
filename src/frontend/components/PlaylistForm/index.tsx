@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
+import { useForm, SubmitHandler } from "react-hook-form"
 import { z } from "zod"
 
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,7 @@ import { Toggle } from "@/components/ui/toggle"
 import { useUserContext } from "contexts/UserContext"
 import { User } from "services/api.types"
 import { Shuffle } from "lucide-react"
+import { useRef } from "react"
 
 const getFormSchema = (session: User[]) => {
   return z.object({
@@ -29,15 +30,17 @@ const getFormSchema = (session: User[]) => {
 }
 
 interface PlaylistFormProps {
-  onSubmit?: Function
+  onSubmit?: Function,
+  allowCreate?: boolean
 }
 
 export interface OnSubmitArgs {
   length: number,
-  shuffle: boolean
+  shuffle: boolean,
+  create: boolean
 }
 
-export default function PlaylistForm({ onSubmit }: PlaylistFormProps) {
+export default function PlaylistForm({ onSubmit, allowCreate = false }: PlaylistFormProps) {
   const { session } = useUserContext();
   const formSchema = getFormSchema(session);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,19 +49,24 @@ export default function PlaylistForm({ onSubmit }: PlaylistFormProps) {
       shuffle: true
     },
   })
+  const createBtnRef = useRef(null);
 
-  function onFormSubmit(values: z.infer<typeof formSchema>) {
+  const onFormSubmit: SubmitHandler<z.infer<typeof formSchema>> = (values, event) => {
     if (!onSubmit) {
       console.log(values);
       return;
     }
 
-    onSubmit(values as OnSubmitArgs);
+    const nativeEvent = event?.nativeEvent as SubmitEvent;
+    const onSubmitArgs = values as OnSubmitArgs;
+    
+    onSubmitArgs.create = nativeEvent.submitter === createBtnRef.current
+    onSubmit(onSubmitArgs);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onFormSubmit)} className="flex gap-4 items-top   justify-center">
+      <form onSubmit={form.handleSubmit(onFormSubmit)} className="flex gap-4 items-top justify-center">
         <FormField
           control={form.control}
           name="length"
@@ -91,7 +99,8 @@ export default function PlaylistForm({ onSubmit }: PlaylistFormProps) {
           )}
         />
 
-        <Button type="submit">Go!</Button>
+        <Button type="submit">Preview</Button>
+        {allowCreate && <Button disabled={!allowCreate} variant={"secondary"} ref={createBtnRef} type="submit">Create</Button>}
       </form>
     </Form>
   )
