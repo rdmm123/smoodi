@@ -28,6 +28,7 @@ export default function SessionPage() {
     </div>
     <CurrentSession />
     <Button className="rounded-xl" asChild>
+      {/* TODO: Block this button until there is at least 1 member in the session */}
       <Link to={"/blendify"} className="text-xl">Let's Go!</Link>
     </Button>
   </div>;

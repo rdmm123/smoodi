@@ -53,6 +53,7 @@ export default function BlendifyPage() {
     { apiError &&  <ErrorMessage message={apiError} />}
     <h1 className="text-5xl font-bold mb-9 text-center font-serif">Make your Blend!</h1>
     <PlaylistForm onSubmit={handleFormSubmit} />
+    <Playlist tracks={playlist.tracks} onConfirm={handlePlaylistConfirm}/>
     {/* <h1 className="text-5xl font-bold mb-9 text-center">Let's make a blend!</h1>
     <div className="flex justify-around w-3/4">
       <PlaylistForm onSubmit={handleFormSubmit} />
