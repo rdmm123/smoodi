@@ -66,7 +66,7 @@ export default function PlaylistForm({ onSubmit, allowCreate = false }: Playlist
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onFormSubmit)} className="flex gap-4 items-top justify-center">
+      <form onSubmit={form.handleSubmit(onFormSubmit)} className="flex gap-4 items-top justify-center flex-wrap">
         <FormField
           control={form.control}
           name="length"

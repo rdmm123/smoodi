@@ -1,12 +1,14 @@
 import { useUserContext } from "contexts/UserContext";
 import { useState } from "react";
 import { createBlend } from "services/api";
-
 import { Playlist as PlaylistType } from "services/api.types";
 import Playlist from "components/Playlist";
 import PlaylistForm, { OnSubmitArgs } from "components/PlaylistForm";
 import PlaylistDialog from "components/Playlist/PlaylistDialog";
 import ErrorMessage from "components/ErrorMessage";
+import SessionFooter from "components/CurrentSession/SessionFooter";
+
+
 
 export default function BlendifyPage() {
   const { user, session } = useUserContext();
@@ -40,14 +42,15 @@ export default function BlendifyPage() {
     setPlaylist(playlistResponse.playlist);
   }
 
-  return <>
-    <div className="space-y-6">
-      <h1 className="text-5xl font-bold mb-9 text-center font-serif">Make your Blend!</h1>
+  return <div className="flex flex-col justify-between items-center h-full w-full gap-3">
+    <div className="flex flex-col justify-center grow gap-10 w-full py-5">
+      <h1 className="text-5xl font-bold text-center font-serif">Make your Blend!</h1>
       <PlaylistForm onSubmit={handleFormSubmit} allowCreate={playlist.tracks.length > 0}/>
       { apiError &&  <ErrorMessage message={apiError} />}
       <Playlist tracks={playlist.tracks}/>
       <PlaylistDialog open={isPlaylistDialogOpen} setOpen={setIsPlaylistDialogOpen} playlist={playlist} />
     </div>
-    {/* TODO: Add current session footer */}
-  </>
+    
+    <SessionFooter />
+  </div>
 }
