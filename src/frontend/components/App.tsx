@@ -12,12 +12,9 @@ export default function App() {
     <>
     <UserContextProvider>
       <Header />
-    
-      <section className="p-10 flex flex-col justify-center items-center w-100" id="content">
-
+      <section className="grow self-center w-2/3 text-my-rose" id="content">
         {error && <ErrorMessage message={error} />}
-          
-          <Outlet />
+        <Outlet />
       </section>
     </UserContextProvider>
     </>

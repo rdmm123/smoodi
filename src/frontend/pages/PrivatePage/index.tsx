@@ -7,7 +7,6 @@ export default function PrivatePage({ children }: { children: ReactNode }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log('hello')
         if (!user?.id) {
             navigate('/');
         }

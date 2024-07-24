@@ -1,30 +1,31 @@
+import React from 'react';
 import { Link } from "react-router-dom"
-import BlendifyLogo from 'assets/blendify-logo.svg'
+import { Button } from "@/components/ui/button";
+
 import { useUserContext } from "contexts/UserContext"
+import { LogoSize, Logo } from "components/Logo";
+import UserDropdown from './UserDropdown';
 
-import AnchorButton from "components/Button/AnchorButton";
 
-function Header() {
+const LoginButton: React.FC = () => (
+  <Button asChild>
+    <a href={BACKEND_HOST + "/auth/login"}>Log In</a>
+  </Button>
+)
+
+function Header(): React.ReactElement {
   const { user } = useUserContext();
 
   return (
-    <section className="flex flex-row p-5 shadow-md items-center rounded-lg" id="header">
-      <Link to={`/`} className="grow">
-        <img src={BlendifyLogo} alt="Blendify logo" className="w-40" />
+    <header className="flex flex-row p-4 drop-shadow-xl items-center justify-between rounded-lg bg-my-purple-950">
+      <Link to={`/`}>
+        <Logo size={LogoSize.LARGE} />
       </Link>
       {user?.email
-      ? <div className="flex items-center gap-5">
-          <h1 className="text-lg">Logged in as: <span className="underline text-blue-500">{user.email}</span></h1>
-          <AnchorButton href={BACKEND_HOST + "/auth/logout"} color="red" light={true}>
-            Log Out
-          </AnchorButton>
-      </div>
-      : <AnchorButton href={BACKEND_HOST + "/auth/login"} color="blue" light={false}>
-          Log In
-        </AnchorButton>
-      }
-
-    </section>
+      ?
+        <UserDropdown />
+      : <LoginButton />}
+    </header>
   )
 }
 

@@ -1,16 +1,37 @@
+import { useState, useEffect } from "react"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Copy, Check } from "lucide-react"
+import { twMerge } from "tailwind-merge"
+
 interface CopyInputProps {
   text: string,
-  className: string
+  className? : string
 }
 
 export default function CopyInput({ text, className }: CopyInputProps) {
-  return <div className={'flex items-center ' + className}>
-    <input type="text" className="text-lg p-2 bg-slate-100 text-slate-600 outline outline-2 outline-slate-300 rounded-l-lg grow" value={text} disabled />
-    <button
-      type="button"
-      className="text-lg bg-blue-500 text-white p-2 outline outline-2 outline-blue-500 rounded-r-lg hover:bg-blue-700"
-      onClick={() => navigator.clipboard.writeText(text)}>
-      Copy
-    </button>
+  const [isCopied, setIsCopied] = useState(false);
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setIsCopied(true);
+    } catch (error) {
+      console.error(error);
+      setIsCopied(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!isCopied) return;
+    setTimeout(() => setIsCopied(false), 1000)
+  }, [isCopied])
+
+  return <div className={twMerge('flex items-center space-x-2', className)}>
+    <Input className="border-2 border-my-green bg-my-green-100 text-my-purple" placeholder={text} readOnly />
+    
+    <Button type="button" onClick={copyToClipboard}>
+      {isCopied ? <Check /> : <Copy />}
+    </Button>
   </div>
 }

@@ -1,4 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-  
+
+*, *::before, *::after{
+    box-sizing: border-box; 
+}
+
+body {
+    height: 100dvh;
+    background-color: #4C1A57;
+}
+
+#root {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('assets/fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('assets/fonts/Montserrat/Montserrat-Medium.ttf') format('truetype');
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('assets/fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'Cardo';
+    src: url('assets/fonts/Cardo/Cardo-Bold.ttf') format('truetype');
+    font-weight: 700;
+}
