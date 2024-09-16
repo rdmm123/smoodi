@@ -10,12 +10,12 @@ import {
 
 import { ChevronDown, LogOut } from "lucide-react";
 
-import { useUserContext } from "contexts/UserContext"
+import { useCurrentUserQuery } from "hooks/user";
 import {  getUserDisplayName } from "utils/user";
 import UserAvatar from "./UserAvatar";
 
 export default function UserDropdown() {
-  const { user } = useUserContext();
+  const { data: user } = useCurrentUserQuery()
 
   if (!user) {
     return;
@@ -37,4 +37,4 @@ export default function UserDropdown() {
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>;
-} 
+}

@@ -1,11 +1,15 @@
-import { useUserContext } from "contexts/UserContext"
+import { useCurrentUserQuery, useUserSessionQuery } from "hooks/user";
 import SessionUserCard from "./SessionUserCard";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+const SESSION_REFRESH_MS = 1000 * 2;
+
 export default function CurrentSession() {
-    const { session, user } = useUserContext();
-    if (!user) return;
+    const { data: user } = useCurrentUserQuery();
+    const { data: session } = useUserSessionQuery(user, SESSION_REFRESH_MS);
+
+    if (!user || !session) return;
 
     const allUsers = [user, ...session]
     // TODO: Add link to spotify for each user

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button";
 
-import { useUserContext } from "contexts/UserContext"
+import { useCurrentUserQuery } from 'hooks/user';
 import { LogoSize, Logo } from "components/Logo";
 import UserDropdown from './UserDropdown';
 
@@ -14,7 +14,7 @@ const LoginButton: React.FC = () => (
 )
 
 function Header(): React.ReactElement {
-  const { user } = useUserContext();
+  const { data: user } = useCurrentUserQuery()
 
   return (
     <header className="flex flex-row p-4 drop-shadow-xl items-center justify-between rounded-lg bg-my-purple-950">

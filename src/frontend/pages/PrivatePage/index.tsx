@@ -1,9 +1,10 @@
-import { useUserContext } from "contexts/UserContext";
 import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useCurrentUserQuery } from "hooks/user";
+
 export default function PrivatePage({ children }: { children: ReactNode }) {
-    const { user } =  useUserContext();
+    const { data: user } =  useCurrentUserQuery();
     const navigate = useNavigate();
 
     useEffect(() => {

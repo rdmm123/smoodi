@@ -1,23 +1,12 @@
-import { useUserContext } from "contexts/UserContext";
-import { useEffect } from "react";
 import CopyInput from "components/CopyInput";
 import CurrentSession from "components/CurrentSession";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
+import { useCurrentUserQuery } from "hooks/user";
 
 export default function SessionPage() {
-  const { user, setRefreshSession } = useUserContext();
-
-  useEffect(() => {
-    if (!setRefreshSession) return;
-
-    const interval = setInterval(() => {
-      setRefreshSession((prevRefreshSession) => !prevRefreshSession);
-    }, 2000);
-
-    return () => clearInterval(interval);
-  });
+  const { data: user } = useCurrentUserQuery();
 
   return <div className="flex flex-col items-center justify-center h-full gap-5">
     <h1 className="text-5xl font-bold text-center font-serif">Your Session</h1>

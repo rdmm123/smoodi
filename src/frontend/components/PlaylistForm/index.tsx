@@ -13,10 +13,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Toggle } from "@/components/ui/toggle"
 
-import { useUserContext } from "contexts/UserContext"
 import { User } from "services/api.types"
 import { Shuffle } from "lucide-react"
 import { useRef } from "react"
+import { useCurrentUserQuery, useUserSessionQuery } from "hooks/user"
 
 const getFormSchema = (session: User[]) => {
   return z.object({
@@ -41,7 +41,13 @@ export interface OnSubmitArgs {
 }
 
 export default function PlaylistForm({ onSubmit, allowCreate = false }: PlaylistFormProps) {
-  const { session } = useUserContext();
+  const { data: user } = useCurrentUserQuery();
+  const { data: session } = useUserSessionQuery(user);
+
+  if (!session) {
+    return;
+  }
+
   const formSchema = getFormSchema(session);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,7 +65,7 @@ export default function PlaylistForm({ onSubmit, allowCreate = false }: Playlist
 
     const nativeEvent = event?.nativeEvent as SubmitEvent;
     const onSubmitArgs = values as OnSubmitArgs;
-    
+
     onSubmitArgs.create = nativeEvent.submitter === createBtnRef.current
     onSubmit(onSubmitArgs);
   }

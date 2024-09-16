@@ -5,14 +5,14 @@ import { X } from "lucide-react";
 import { User } from "services/api.types";
 import { getUserDisplayName } from "utils/user";
 import UserAvatar from "components/Header/UserAvatar";
-import { useUserContext } from "contexts/UserContext";
+import { useCurrentUserQuery } from "hooks/user";
 
 interface SessionUserCardProps {
   user: User
 }
 
 export default function SessionUserCard({ user }: SessionUserCardProps): React.ReactElement {
-  const { user: currentUser } = useUserContext();
+  const { data: currentUser } = useCurrentUserQuery();
 
   const removeUserFromSession = () => {
     // TODO

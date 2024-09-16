@@ -3,15 +3,16 @@ import { Link } from "react-router-dom";
 import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { useUserContext } from "contexts/UserContext"
+import { useCurrentUserQuery, useUserSessionQuery } from "hooks/user";
 
 export default function SessionFooter() {
-    const { session, user } = useUserContext();
-    
-    if (!user) {
+    const { data: user } = useCurrentUserQuery();
+    const { data: session } = useUserSessionQuery(user);
+
+    if (!user || !session) {
         return;
     }
-    
+
     const allUsers = [user, ...session]
     return <div className="flex items-center gap-3 max-w-full">
         <p>Current<br/>Session</p>

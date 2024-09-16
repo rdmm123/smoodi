@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
-import { useUserContext } from "contexts/UserContext"
+import { useCurrentUserQuery } from "hooks/user";
 
 function HomePage() {
-  const { user } = useUserContext();
+  const { data: user } = useCurrentUserQuery();
   const userLoggedIn = !!user?.email;
 
   return <div className="flex flex-col justify-center items-center gap-16 h-full">

@@ -1,6 +1,8 @@
-import { useUserContext } from "contexts/UserContext";
 import { useState } from "react";
+
 import { createBlend } from "services/api";
+import { useCurrentUserQuery, useUserSessionQuery } from "hooks/user";
+
 import { Playlist as PlaylistType } from "services/api.types";
 import Playlist from "components/Playlist";
 import PlaylistForm, { OnSubmitArgs } from "components/PlaylistForm";
@@ -11,18 +13,20 @@ import SessionFooter from "components/CurrentSession/SessionFooter";
 
 
 export default function BlendifyPage() {
-  const { user, session } = useUserContext();
+  const { data: user } = useCurrentUserQuery();
+  const { data: session } = useUserSessionQuery(user);
+
   const initialPlaylist: PlaylistType = {tracks: []}
   const [playlist, setPlaylist] = useState(initialPlaylist);
 
   const [isPlaylistDialogOpen, setIsPlaylistDialogOpen] = useState(false);
-  
+
   const [apiError, setApiError] = useState('');
 
-  if (!user) { return }
+  if (!user || !session) { return }
 
   const blendUsers = [user, ...session];
-  
+
   const handleFormSubmit = async ({ length, create }: OnSubmitArgs) => {
     const playlistResponse = await createBlend(blendUsers, length, create);
     if (!playlistResponse.isSuccess) {
@@ -48,7 +52,7 @@ export default function BlendifyPage() {
       <Playlist tracks={playlist.tracks}/>
       <PlaylistDialog open={isPlaylistDialogOpen} setOpen={setIsPlaylistDialogOpen} playlist={playlist} />
     </div>
-    
+
     <SessionFooter />
   </div>
 }
