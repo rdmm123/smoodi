@@ -4,9 +4,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 export function TrackCardSkeleton() {
   return <div className="flex items-center justify-between w-full bg-my-green-100 rounded-xl border-2 border-my-green p-2 text-my-purple">
     <div className="flex gap-3 w-1/2">
-      <Skeleton className="aspect-square size-12 rounded-lg" />
+      <Skeleton className="w-14 h-12 rounded-lg" />
       <div className="space-y-2 w-full">
-        <Skeleton className="h-5 w-full" />
+        <Skeleton className="h-6 w-full" />
         <Skeleton className="h-5 w-2/3" />
       </div>
     </div>
