@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { z } from "zod"
+import { Shuffle, Loader2 } from "lucide-react"
+import { useRef } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,8 +16,6 @@ import { Input } from "@/components/ui/input"
 import { Toggle } from "@/components/ui/toggle"
 
 import { User } from "services/api.types"
-import { Shuffle } from "lucide-react"
-import { useRef } from "react"
 import { useCurrentUserQuery, useUserSessionQuery } from "hooks/user"
 
 const getFormSchema = (session: User[]) => {
@@ -32,6 +32,7 @@ const getFormSchema = (session: User[]) => {
 interface PlaylistFormProps {
   onSubmit?(onSubmitArgs: OnSubmitArgs): void,
   allowCreate?: boolean
+  isLoading?: boolean
 }
 
 export interface OnSubmitArgs {
@@ -40,7 +41,7 @@ export interface OnSubmitArgs {
   create: boolean
 }
 
-export default function PlaylistForm({ onSubmit, allowCreate = false }: PlaylistFormProps) {
+export default function PlaylistForm({ onSubmit, allowCreate = false, isLoading = false }: PlaylistFormProps) {
   const { data: user } = useCurrentUserQuery();
   const { data: session } = useUserSessionQuery(user);
 
@@ -105,8 +106,25 @@ export default function PlaylistForm({ onSubmit, allowCreate = false }: Playlist
           )}
         />
 
-        <Button type="submit">Preview</Button>
-        {allowCreate && <Button disabled={!allowCreate} variant={"secondary"} ref={createBtnRef} type="submit">Create</Button>}
+        <Button
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Preview
+        </Button>
+        {
+          allowCreate &&
+          <Button
+            disabled={!allowCreate || isLoading}
+            variant={"secondary"}
+            ref={createBtnRef}
+            type="submit"
+          >
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Create
+          </Button>
+        }
       </form>
     </Form>
   )
