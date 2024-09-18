@@ -58,12 +58,13 @@ class Blender:
         playlist_length: int = DEFAULT_PLAYLIST_LENGTH,
     ) -> None:
         self.playlist: list[Track] = []
-        self._songs_per_user: int = 0
+        self._playlist_per_user: dict[str, list[Track]] = {}
 
         self.users = {}
         for u in users:
             assert u.id is not None
             self.users[u.id] = u
+            self._playlist_per_user[u.id] = []
 
         self.client = client
         self.playlist_length = playlist_length
@@ -108,12 +109,12 @@ class Blender:
 
         return False
 
-    def blend(self) -> list[Track]:
+    def blend(self, shuffle: bool = False) -> list[Track]:
         if len(self.playlist) == self.playlist_length:
-            return self.playlist
+            return self.join_playlist(shuffle)
 
         if self._all_stacks_empty():
-            return self.playlist
+            return self.join_playlist(shuffle)
 
         current_tops: dict[str, Track] = {}
         remaining_users = self._get_remaining_users()
@@ -157,6 +158,32 @@ class Blender:
 
             current_tops[stack_top.uri] = stack_top
 
-        self.playlist += [track for track in current_tops.values()]
+        for track in current_tops.values():
+            self.playlist.append(track)
+            self._playlist_per_user[track.user].append(track)
 
-        return self.blend()
+        return self.blend(shuffle)
+
+    def join_playlist(self, shuffle: bool) -> list[Track]:
+        if not shuffle:
+            return self.playlist
+
+        songs_per_user, extra_song_count = divmod(self.playlist_length, len(self.users))
+        total_count = songs_per_user + extra_song_count
+
+        playlist = []
+        shuffled_playlist_per_user = list(self._playlist_per_user.values())
+
+        for sub_playlist in shuffled_playlist_per_user:
+            random.shuffle(sub_playlist)
+
+        for i in range(total_count):
+            for sub_playlist in shuffled_playlist_per_user:
+                try:
+                    song = sub_playlist[i]
+                except IndexError:
+                    continue
+
+                playlist.append(song)
+
+        return playlist

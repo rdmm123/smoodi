@@ -15,6 +15,7 @@ bp = Blueprint("blender", __name__, url_prefix="/blender")
 def blend() -> ResponseReturnValue:
     body = request.get_json()
     create = body.get("create", False)
+    shuffle = body.get("shuffle", False)
 
     if "users" not in body or not body["users"]:
         abort(400, "Users not in request")
@@ -40,7 +41,7 @@ def blend() -> ResponseReturnValue:
     else:
         blender = Blender(client, users)
 
-    tracks = blender.blend()
+    tracks = blender.blend(shuffle)
     playlist = SpotifyPlaylist(tracks=tracks)
 
     if create:

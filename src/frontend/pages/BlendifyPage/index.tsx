@@ -22,8 +22,8 @@ export default function BlendifyPage() {
 
   const createBlendMutation = useMutation({
     mutationKey: ["blend"],
-    mutationFn: ({ blendUsers, length, create }: CreateBlendMutationArgs) =>
-      createBlend(blendUsers, length, create),
+    mutationFn: ({ blendUsers, length, create, shuffle }: CreateBlendMutationArgs) =>
+      createBlend(blendUsers, length, create, shuffle),
     onSuccess: (data, variables) => {
       setPlaylist(data.playlist);
       setApiError("")
