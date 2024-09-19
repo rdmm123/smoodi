@@ -59,3 +59,20 @@ export const createBlend = async (
 
     return { playlist };
 }
+
+export const deleteFromUserSession = async (owner: User, to_delete: User) =>  {
+    const response = await fetch(`${API_URL}/users/${owner.id}/session/${to_delete.id}`, {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+
+    if (!response.ok) {
+        const errorResponse: ErrorResponse = await response.json()
+        throw Error(`Ooops! Something went wrong: ${errorResponse.message}. Please try again later.`)
+    }
+
+    const newSession: UserSessionResponse = await response.json();
+    return newSession;
+}

@@ -40,7 +40,6 @@ class User(APIModel):
     token: str = ""
     refresh_token: str = ""
     token_expires: str = ""
-    top_tracks: Sequence[Track] = field(default_factory=list)
     image_url: str = ""
 
 

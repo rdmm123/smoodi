@@ -159,6 +159,7 @@ class Blender:
             current_tops[stack_top.uri] = stack_top
 
         for track in current_tops.values():
+            assert track.user
             self.playlist.append(track)
             self._playlist_per_user[track.user].append(track)
 

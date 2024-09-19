@@ -86,16 +86,7 @@ def callback() -> ResponseReturnValue:
     del session["state"]
 
     if "main_user_id" in session:
-        current_session_key = f"session:{session['main_user_id']}"
-        current_session: list[str] = json.loads(
-            storage.read(current_session_key) or "[]"
-        )
-
-        if user_id not in current_session:
-            current_session.append(user_id)
-            storage.write(
-                f"session:{session['main_user_id']}", json.dumps(current_session)
-            )
+        user_repository.add_to_session(session['main_user_id'], user_id)
 
         del session["main_user_id"]
         return redirect("/after_login")

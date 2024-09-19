@@ -82,6 +82,35 @@ class UserRepository(Generic[UserClassT]):
 
         return users
 
+    def add_to_session(self, owner_id: str, new_user_id: str) -> None:
+        session_key = f"session:{owner_id}"
+        session: list[str] = json.loads(
+            self._storage.read(session_key) or "[]"
+        )
+
+        if new_user_id not in session:
+            session.append(new_user_id)
+            self._storage.write(
+                f"session:{owner_id}", json.dumps(session)
+            )
+
+    def remove_from_session(self, owner_id: str, remove_user_id: str) -> None:
+        session_key = f"session:{owner_id}"
+        session: list[str] = json.loads(
+            self._storage.read(session_key) or "[]"
+        )
+
+        if len(session) == 0:
+            raise ValueError("Session is already empty.")
+
+        if remove_user_id not in session:
+            raise ValueError(f"User {remove_user_id} not in session.")
+
+        del session[session.index(remove_user_id)]
+        self._storage.write(
+            f"session:{owner_id}", json.dumps(session)
+        )
+
     def save_user(self, user: UserClassT) -> None:
         self._storage.write(f"user:{user.id}", json.dumps(asdict(user)))
         self._storage.write(f"user:email:{user.email}", user.id)
