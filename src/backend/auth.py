@@ -14,9 +14,8 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 @bp.route("/login", defaults={"main_user_id": None})
 @bp.route("/login/<main_user_id>")
 def login(main_user_id: str | None) -> ResponseReturnValue:
-    if (
-        main_user_id is not None
-    ):  # Link is shared by the user creating the blend (main user)
+    # Link is shared by the user creating the blend (main user)
+    if main_user_id is not None:
         existing_data = storage.read(f"user:{main_user_id}")
         if not existing_data:
             return redirect(
@@ -86,6 +85,12 @@ def callback() -> ResponseReturnValue:
     del session["state"]
 
     if "main_user_id" in session:
+        if session["main_user_id"] == user_id:
+            return redirect(
+                redirect_to
+                + "?"
+                + urlencode({"error": "You can't join your own session!"})
+            )
         user_repository.add_to_session(session['main_user_id'], user_id)
 
         del session["main_user_id"]
