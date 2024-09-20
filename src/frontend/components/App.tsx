@@ -7,6 +7,7 @@ import Header from "components/Header";
 
 import { ErrorLoader } from "router";
 import ErrorMessage from "components/ErrorMessage";
+import Footer from "./Footer";
 
 
 const queryClient = new QueryClient()
@@ -22,7 +23,8 @@ export default function App() {
           {error && <ErrorMessage message={error} />}
           <Outlet />
         </section>
-      <ReactQueryDevtools initialIsOpen={false} />
+        <Footer />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
     </QueryClientProvider>
     </>
   )
