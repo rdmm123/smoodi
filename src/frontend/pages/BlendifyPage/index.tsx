@@ -52,7 +52,7 @@ export default function BlendifyPage() {
 
   return <div className="flex flex-col justify-between items-center h-full w-full gap-3">
     <div className="flex flex-col justify-center grow gap-10 w-full py-5">
-      <h1 className="text-5xl font-bold text-center font-serif">Make your Blend!</h1>
+      <h1 className="text-5xl font-bold text-center font-serif">Make your Smoodi!</h1>
       <PlaylistForm
         onSubmit={(args) => createBlendMutation.mutate({blendUsers, ...args})}
         allowCreate={playlist.tracks.length > 0}

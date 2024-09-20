@@ -45,7 +45,7 @@ def blend() -> ResponseReturnValue:
     playlist = SpotifyPlaylist(tracks=tracks)
 
     if create:
-        playlist_name = "Blendify - " + ", ".join([u.name for u in users])
+        playlist_name = "Smoodi - " + ", ".join([u.name for u in users])
         playlist = client.create_playlist(
             user=user,
             name=playlist_name,

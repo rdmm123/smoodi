@@ -9,10 +9,11 @@ export enum LogoSize {
 }
 
 interface LogoProps {
-  size: LogoSize
+  size: LogoSize,
+  style?: 'vertical' | 'horizontal'
 }
 
-export function Logo({ size }: LogoProps) {
+export function Logo({ size, style = 'horizontal' }: LogoProps) {
   let gapSize: string, iconSize: number, fontSize: string;
 
   if (size === LogoSize.SMALL) {
@@ -39,8 +40,9 @@ export function Logo({ size }: LogoProps) {
     return;
   }
 
-  return <div className={`flex items-end text-my-rose ${gapSize}`}>
+  const flexDirection = style === 'vertical' ? 'flex-col items-center' : 'flex-row';
+  return <div className={`flex items-end text-my-rose ${gapSize} ${flexDirection}`}>
     <CupSoda size={iconSize} />
-    <h1 className={`${fontSize} font-serif`}>Blendify</h1>
+    <h1 className={`${fontSize} font-serif`}>smoodi</h1>
   </div>
 }
