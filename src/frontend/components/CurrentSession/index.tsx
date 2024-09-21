@@ -1,7 +1,7 @@
 import { useCurrentUserQuery, useUserSessionQuery } from "hooks/user";
 import SessionUserCard from "./SessionUserCard";
 import { deleteFromUserSession } from "services/api";
-import { User } from "services/api.types";
+import { User, UserSessionResponse } from "services/api.types";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -12,16 +12,17 @@ export default function CurrentSession() {
     const { data: user } = useCurrentUserQuery();
     const { data: session } = useUserSessionQuery(user, SESSION_REFRESH_MS);
 
-    if (!user) { return }
-
     const queryClient = useQueryClient();
 
     const deleteMutation = useMutation({
       mutationKey: ["users", user?.id, "session", "delete"],
       mutationFn: (toDelete: User) => {
-        return deleteFromUserSession(user, toDelete)
+        if (!user) {
+          throw new Error("User is not logged in.");
+        }
+        return deleteFromUserSession(user, toDelete);
       },
-      onSuccess: (data) => {
+      onSuccess: (data: UserSessionResponse) => {
         queryClient.setQueryData(["users", user?.id, "session"], data.session)
       }
     })
