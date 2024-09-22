@@ -1,4 +1,3 @@
-import json
 import uuid
 
 from flask import Blueprint, redirect, session, request, url_for, make_response
@@ -91,7 +90,7 @@ def callback() -> ResponseReturnValue:
                 + "?"
                 + urlencode({"error": "You can't join your own session!"})
             )
-        user_repository.add_to_session(session['main_user_id'], user_id)
+        user_repository.add_to_session(session["main_user_id"], user_id)
 
         del session["main_user_id"]
         return redirect("/after_login")

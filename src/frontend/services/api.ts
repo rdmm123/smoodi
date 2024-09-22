@@ -26,20 +26,20 @@ export const fetchUserSession = async ({ id }: User) => {
     return userSessionResponse.session;
 }
 
-export const createBlend = async (
-    users: User[],
+export const previewBlend = async (
+    mainUser: User,
+    session: User[],
     playlistLength: number,
-    create: boolean = false,
     shuffle: boolean = false) => {
-    const response = await fetch(`${API_URL}/blender/blend`, {
+    const response = await fetch(`${API_URL}/blender/preview`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            users: users.map(user => user.id),
+            main_user: mainUser.id,
+            session: session.map(user => user.id),
             playlist_length: playlistLength,
-            create,
             shuffle
         })
     })
@@ -52,6 +52,33 @@ export const createBlend = async (
     const blendResponse: BlendResponse = await response.json()
     const playlist: Playlist = { ...blendResponse.playlist, tracks: [] };
 
+    const users = [mainUser, ...session];
+    playlist.tracks = blendResponse.playlist.tracks.map(track => ({
+        ...track,
+        user: users.filter(user => user.id === track.user)[0]
+    }))
+
+    return { playlist };
+}
+
+export const createBlend = async (mainUser: User, session: User[]) => {
+    const response = await fetch(`${API_URL}/blender/create`, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({user: mainUser.id})
+    })
+
+    if (!response.ok) {
+        const errorResponse: ErrorResponse = await response.json();
+        throw Error(`Ooops! Something went wrong: ${errorResponse.message}. Please try again later.`);
+    }
+
+    const blendResponse: BlendResponse = await response.json()
+    const playlist: Playlist = { ...blendResponse.playlist, tracks: [] };
+
+    const users = [mainUser, ...session];
     playlist.tracks = blendResponse.playlist.tracks.map(track => ({
         ...track,
         user: users.filter(user => user.id === track.user)[0]

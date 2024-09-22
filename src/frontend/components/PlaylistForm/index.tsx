@@ -30,26 +30,22 @@ const getFormSchema = (session: User[]) => {
 }
 
 interface PlaylistFormProps {
-  onSubmit?(onSubmitArgs: OnSubmitArgs): void,
+  onPreview(onSubmitArgs: OnPreviewArgs): void,
+  onCreate(): void,
   allowCreate?: boolean
   isLoading?: boolean
 }
 
-export interface OnSubmitArgs {
+export interface OnPreviewArgs {
   length: number,
-  shuffle: boolean,
-  create: boolean
+  shuffle: boolean
 }
 
-export default function PlaylistForm({ onSubmit, allowCreate = false, isLoading = false }: PlaylistFormProps) {
+export default function PlaylistForm({ onPreview, onCreate, allowCreate = false, isLoading = false }: PlaylistFormProps) {
   const { data: user } = useCurrentUserQuery();
   const { data: session } = useUserSessionQuery(user);
 
-  if (!session) {
-    return;
-  }
-
-  const formSchema = getFormSchema(session);
+  const formSchema = getFormSchema(session!);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -59,17 +55,21 @@ export default function PlaylistForm({ onSubmit, allowCreate = false, isLoading 
   const createBtnRef = useRef(null);
 
   const onFormSubmit: SubmitHandler<z.infer<typeof formSchema>> = (values, event) => {
-    if (!onSubmit) {
-      console.log(values);
-      return;
-    }
-
     const nativeEvent = event?.nativeEvent as SubmitEvent;
-    const onSubmitArgs = values as OnSubmitArgs;
+    const onPreviewArgs = values as OnPreviewArgs;
 
-    onSubmitArgs.create = nativeEvent.submitter === createBtnRef.current
-    onSubmit(onSubmitArgs);
+    if (nativeEvent.submitter === createBtnRef.current) {
+      onCreate();
+    } else {
+      onPreview(onPreviewArgs);
+    }
   }
+
+
+  if (!session) {
+    return;
+  }
+
 
   return (
     <Form {...form}>

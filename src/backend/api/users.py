@@ -65,7 +65,7 @@ def remove_user_from_session(user_id: str, user_to_remove: str) -> ResponseRetur
     return {"session": _format_user_session(session)}
 
 
-def _format_user_session(session: list[SpotifyUser]) -> list[dict[str, str]] :
+def _format_user_session(session: list[SpotifyUser]) -> list[dict[str, str]]:
     session_dict: list[dict[str, str]] = []
     for user in session:
         user_dict = asdict(user)
