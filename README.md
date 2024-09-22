@@ -8,7 +8,7 @@ Smoodi is built using a React frontend in front of a Flask web server. It uses O
 ### Requirements
 - [Python 3.11 or later](https://www.python.org/downloads/)
 - [Node 18 or later](https://nodejs.org/en/download/package-manager)
-- [Docker and compose (optional)](https://docs.docker.com/engine/install/)
+- [Docker and compose](https://docs.docker.com/engine/install/)
 - [Spotify Developer account](https://developer.spotify.com/)
 
 ### Spotify API set up steps
@@ -46,7 +46,7 @@ If you want to use a debugger for the backend, you can change the `target` of th
 - To lint you can use `ruff`.
 - For JS-related stuff you can use the regular `npm` scripts: `dev`, `build`, `lint`, `preview`
 
-### TODOs and nice to haves
+## TODOs and nice to haves
 These are things that I think are missing or would be nice to add to the project in the future.
 - Serve JS content using a CDN.
 - Remove previous Smoodi generated playlists when generating a new one.
