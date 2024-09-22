@@ -1,9 +1,9 @@
 version: '3.4'
 
 services:
-  blendify:
-    container_name: blendify
-    image: blendify
+  smoodi:
+    container_name: smoodi
+    image: smoodi
     build:
       context: .
       dockerfile: ./build/dev/server/Dockerfile
@@ -14,7 +14,7 @@ services:
     environment:
       - SPOTIFY_CLIENT_SECRET=update_me
       - SPOTIFY_CLIENT_ID=update_me
-      - CACHE_HOST=blendify-cache
+      - CACHE_HOST=smoodi-cache
       - CACHE_PORT=6379
       - CACHE_USER=user
       - CACHE_PASS=pass
@@ -26,8 +26,8 @@ services:
     volumes:
       - ./src:/app/src
   frontend:
-    container_name: blendify-fe
-    image: blendify-fe
+    container_name: smoodi-fe
+    image: smoodi-fe
     build:
       context: .
       dockerfile: ./build/dev/frontend/Dockerfile
@@ -35,10 +35,10 @@ services:
       - 5001:5001
     volumes:
       - ./src/frontend:/app/src/frontend
-  blendify-cache:
-    container_name: blendify-cache
-    image: blendify-cache
-    build: 
+  smoodi-cache:
+    container_name: smoodi-cache
+    image: smoodi-cache
+    build:
       context: .
       dockerfile: ./build/dev/redis/Dockerfile
     ports:
