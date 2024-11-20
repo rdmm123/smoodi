@@ -14,7 +14,7 @@ class SpotifyUser(User):
             name=response["display_name"],
             email=response["email"],
             api_id=response["id"],
-            image_url=response["images"][0]["url"],
+            image_url=response["images"][0]["url"] if len(response["images"]) > 0 else "",
         )
 
     def load_auth_data_from_response(self, auth_response: Dict[str, Any]) -> None:
@@ -45,7 +45,7 @@ class SpotifyTrack(Track):
                 SpotifyArtist.from_api_response(a) for a in response["album"]["artists"]
             ],
             album=response["album"]["name"],
-            cover_art=response["album"]["images"][0]["url"],
+            cover_art=response["album"]["images"][0]["url"] if len(response["album"]["images"]) > 0 else "",
             preview=response["preview_url"],
         )
 
