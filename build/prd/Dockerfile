@@ -23,6 +23,9 @@ COPY . /app
 
 COPY ./build/prd/requirements.txt .
 
+RUN apt-get update && apt-get upgrade
+RUN apt-get install gcc -y
+
 RUN python -m pip install -U pip
 RUN python -m pip install -r requirements.txt
 
